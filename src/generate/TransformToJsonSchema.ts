@@ -5,6 +5,7 @@ import S from 'fluent-json-schema';
 
 import type ExecutionContext from '../services/ExecutionContext.js';
 
+import type IContentstackField from './IContentstackField.js';
 import IsContentstackContentType from './IsContentstackContentType.js';
 
 export default async function TransformToJsonSchema(
@@ -20,7 +21,7 @@ export default async function TransformToJsonSchema(
 		def.additionalProperties(false);
 
 		for (const field of contentType.schema) {
-			def.prop(field.uid, fieldSchemaFor());
+			def.prop(field.uid, fieldSchemaFor(field));
 		}
 
 		builder.definition(contentType.uid, def);
@@ -66,6 +67,15 @@ function resolveContentstackSchema(
 	throw new Error('Could not find schema.json');
 }
 
-function fieldSchemaFor() {
-	return S.string();
+function fieldSchemaFor(field: IContentstackField) {
+	switch (field.data_type) {
+		case 'text':
+			return S.string();
+
+		case 'group':
+			return S.object();
+
+		default:
+			throw new Error(`Unknown field type: ${field.data_type as string}`);
+	}
 }

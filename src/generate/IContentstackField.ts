@@ -2,6 +2,6 @@
 // Justification: Contenstack uses snake_case.
 
 export default interface IContentstackField {
-	readonly data_type: 'text';
+	readonly data_type: 'group' | 'text';
 	readonly uid: string;
 }
