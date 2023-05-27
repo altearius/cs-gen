@@ -1,3 +1,6 @@
+/.data
+/.env
 /dist
 /node_modules
 tsconfig.tsbuildinfo
+/qwerty
