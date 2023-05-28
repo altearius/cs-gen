@@ -1,30 +1,22 @@
-import { mkdtemp, readdir, rm, stat } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, rm, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { inspect } from 'node:util';
 
 export default class ExecutionContext {
-	public readonly managementTokenAlias = managementTokenAlias();
+	public readonly apiKey = apiKey();
+	public readonly baseUrl = new URL(baseUrl());
+
+	public readonly branch: string =
+		process.env.Contentstack_Type_Gen_branch ?? 'main';
+
+	public readonly managementToken = managementToken();
 
 	private constructor(private readonly _workingDirectory: string) {}
 
-	public get branch(): string {
-		return process.env.Contentstack_Type_Gen_branch ?? 'main';
-	}
-
 	public get paths(): {
-		readonly csdx: {
-			readonly dataDir: string;
-			readonly typesRoot: string;
-		};
 		readonly workingDirectory: string;
 	} {
-		const csdxDataDir = resolve(this._workingDirectory, 'csdx');
-
 		return {
-			csdx: {
-				dataDir: csdxDataDir,
-				typesRoot: resolve(csdxDataDir, this.branch, 'content_types')
-			},
 			workingDirectory: this._workingDirectory
 		};
 	}
@@ -33,6 +25,7 @@ export default class ExecutionContext {
 		const resolved = resolve(process.cwd(), dataDirectory());
 		const timestamp = new Date().toISOString().replace(/:/gu, '-');
 		const prefix = join(resolved, `${timestamp}-`);
+		await mkdir(resolved, { recursive: true });
 		return new ExecutionContext(await mkdtemp(prefix));
 	}
 
@@ -101,11 +94,31 @@ function dataDirectory() {
 	return result;
 }
 
-function managementTokenAlias() {
-	const result = process.env.Contentstack_Type_Gen_management_token_alias;
+function apiKey() {
+	const result = process.env.Contentstack_Type_Gen_api_key;
 
 	if (!result) {
-		throw new Error('Contentstack Type Gen management token alias not set');
+		throw new Error('Contentstack Type Gen API key not set');
+	}
+
+	return result;
+}
+
+function baseUrl() {
+	const result = process.env.Contentstack_Type_Gen_base_url;
+
+	if (!result) {
+		throw new Error('Contentstack Type Gen base URL not set');
+	}
+
+	return result;
+}
+
+function managementToken() {
+	const result = process.env.Contentstack_Type_Gen_management_token;
+
+	if (!result) {
+		throw new Error('Contentstack Type Gen management token not set');
 	}
 
 	return result;

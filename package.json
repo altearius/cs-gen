@@ -1,13 +1,11 @@
 {
   "author": "Chris Nielsen <nielsen.chris@gmail.com>",
   "dependencies": {
-    "@contentstack/cli": "^1.7.5",
     "ajv": "^8.12.0",
     "ansi-colors": "^4.1.3",
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "fluent-json-schema": "^4.1.0",
-    "glob": "^10.2.6",
     "json-schema-to-typescript": "^13.0.1",
     "prettier": "^2.8.8",
     "tslib": "^2.5.2"
@@ -22,7 +20,8 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "undici": "^5.22.1"
   },
   "license": "MIT",
   "main": "dist/index.js",
@@ -30,8 +29,10 @@
   "private": false,
   "scripts": {
     "build": "tsc -b ./tsconfig.json",
-    "clean": "rm -rf ./dist ./tsconfig.tsbuildinfo",
+    "clean": "rm -rf ./dist ./tsconfig.tsbuildinfo ./src/generate/*.d.ts",
     "lint": "eslint .",
+    "postbuild": "cp src/generate/*.schema.json dist/generate",
+    "prebuild": "json2ts -i src/generate/GetAllContentTypesResponse.schema.json -o src/generate/IGetAllContentTypesResponse.d.ts",
     "pretty": "prettier . --check"
   },
   "type": "module",

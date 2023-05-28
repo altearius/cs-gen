@@ -1,0 +1,114 @@
+{
+	"$id": "IGetAllContentTypesResponse",
+	"definitions": {
+		"content-field": {
+			"properties": {
+				"data_type": {
+					"enum": [
+						"blocks",
+						"boolean",
+						"isodate",
+						"file",
+						"reference",
+						"group",
+						"json",
+						"global_field",
+						"link",
+						"number",
+						"text"
+					],
+					"type": "string"
+				},
+				"display_name": {
+					"type": "string"
+				},
+				"enum": {
+					"additionalProperties": false,
+					"properties": {
+						"advanced": {
+							"type": "boolean"
+						},
+						"choices": {
+							"items": {
+								"additionalProperties": false,
+								"properties": {
+									"key": {
+										"type": "string"
+									},
+									"value": {
+										"type": "string"
+									}
+								},
+								"required": ["key", "value"],
+								"type": "object"
+							},
+							"type": "array"
+						}
+					},
+					"required": ["advanced", "choices"],
+					"type": "object"
+				},
+				"format": {
+					"type": "string"
+				},
+				"mandatory": {
+					"type": "boolean"
+				},
+				"max": {
+					"type": "number"
+				},
+				"max_instance": {
+					"type": "number"
+				},
+				"min": {
+					"type": "number"
+				},
+				"min_instance": {
+					"type": "number"
+				},
+				"multiple": {
+					"type": "boolean"
+				},
+				"uid": {
+					"type": "string"
+				}
+			},
+			"required": ["data_type", "uid"],
+			"type": "object"
+		},
+		"content-type": {
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"schema": {
+					"items": {
+						"$ref": "#/definitions/content-field"
+					},
+					"type": "array"
+				},
+				"title": {
+					"type": "string"
+				},
+				"uid": {
+					"type": "string"
+				}
+			},
+			"required": ["uid", "title", "schema"],
+			"type": "object"
+		}
+	},
+	"properties": {
+		"content_types": {
+			"items": {
+				"$ref": "#/definitions/content-type"
+			},
+			"type": "array"
+		},
+		"count": {
+			"type": "number"
+		}
+	},
+	"required": ["content_types"],
+	"type": "object"
+}

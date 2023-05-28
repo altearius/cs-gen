@@ -1,27 +1,40 @@
 import { writeFile } from 'node:fs/promises';
-import { basename, join } from 'node:path';
+import { join } from 'node:path';
 
 import S from 'fluent-json-schema';
 
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import type IContentstackField from './IContentstackField.js';
-import IsContentstackContentType from './IsContentstackContentType.js';
+import type {
+	ContentType as IContentstackContentType,
+	ContentField as IContentstackField
+} from './IGetAllContentTypesResponse.js';
 
 export default async function TransformToJsonSchema(
 	ctx: ExecutionContext,
-	contents: ReadonlyMap<string, string | undefined>
+	contentstackSchema: readonly IContentstackContentType[]
 ) {
-	const contentstackSchema = resolveContentstackSchema(contents);
 	const builder = S.object();
 	const schemaPath = join(ctx.paths.workingDirectory, `schema.json`);
 
 	for (const contentType of contentstackSchema) {
 		const def = S.object();
+
+		const required = contentType.schema
+			.filter((s) => s.mandatory)
+			.map((s) => s.uid);
+
 		def.additionalProperties(false);
+		def.required(required);
 
 		for (const field of contentType.schema) {
-			def.prop(field.uid, fieldSchemaFor(field));
+			const fieldSchema = fieldSchemaFor(field);
+
+			if (field.display_name) {
+				fieldSchema.description(field.display_name);
+			}
+
+			def.prop(field.uid, fieldSchema);
 		}
 
 		builder.definition(contentType.uid, def);
@@ -40,42 +53,53 @@ export default async function TransformToJsonSchema(
 	return jsonSchema;
 }
 
-function resolveContentstackSchema(
-	contents: ReadonlyMap<string, string | undefined>
-) {
-	for (const [key, value] of contents.entries()) {
-		if (basename(key) !== 'schema.json') {
-			continue;
-		}
-
-		if (value === undefined) {
-			throw new Error('schema.json has no content');
-		}
-
-		const parsed = JSON.parse(value) as unknown;
-		if (!Array.isArray(parsed)) {
-			throw new Error('schema.json is not an array');
-		}
-
-		if (!parsed.every(IsContentstackContentType)) {
-			throw new Error('schema.json contains invalid content types');
-		}
-
-		return parsed;
-	}
-
-	throw new Error('Could not find schema.json');
-}
-
 function fieldSchemaFor(field: IContentstackField) {
 	switch (field.data_type) {
 		case 'text':
-			return S.string();
+			return textSchemaFor(field);
 
 		case 'group':
 			return S.object();
 
 		default:
+			console.warn(field);
 			throw new Error(`Unknown field type: ${field.data_type as string}`);
 	}
+}
+
+function textSchemaFor(field: IContentstackField) {
+	if (field.multiple) {
+		const array = S.array();
+		array.items(textSchemaFor({ ...field, multiple: false }));
+
+		if (field.min_instance !== undefined) {
+			array.minItems(field.min_instance);
+		}
+
+		if (field.max_instance !== undefined) {
+			array.maxItems(field.max_instance);
+		}
+
+		return array;
+	}
+
+	const schema = S.string();
+
+	if (field.min !== undefined && field.min > 0) {
+		schema.minLength(field.min);
+	}
+
+	if (field.max !== undefined) {
+		schema.maxLength(field.max);
+	}
+
+	if (field.format) {
+		schema.pattern(field.format);
+	}
+
+	if (field.enum) {
+		schema.enum(field.enum.choices.map((choice) => choice.value));
+	}
+
+	return schema;
 }
