@@ -28,5 +28,6 @@
 		"typeRoots": ["./node_modules/@types", "./src/@types"],
 		"types": ["json-schema", "node", "prettier"]
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "src/**/*.test.ts"]
 }
