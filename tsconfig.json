@@ -1,33 +1,12 @@
 {
-	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./src",
-		"composite": true,
-		"declaration": true,
-		"declarationMap": true,
-		"esModuleInterop": false,
-		"forceConsistentCasingInFileNames": true,
-		"importHelpers": true,
-		"inlineSources": true,
-		"lib": ["ES2022"],
-		"module": "ES2022",
-		"moduleResolution": "Node",
-		"newLine": "LF",
-		"noEmitOnError": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noUncheckedIndexedAccess": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"outDir": "./dist",
-		"rootDir": "./src",
-		"skipLibCheck": false,
-		"sourceMap": true,
-		"strict": true,
-		"target": "ES2022",
-		"typeRoots": ["./node_modules/@types", "./src/@types"],
-		"types": ["json-schema", "node", "prettier"]
-	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules", "src/**/*.test.ts"]
+	"extends": "./tsconfig.base.json",
+	"exclude": ["**/*"],
+	"references": [
+		{
+			"path": "./tsconfig.src.json"
+		},
+		{
+			"path": "./tsconfig.test.json"
+		}
+	]
 }

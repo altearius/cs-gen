@@ -1,0 +1,13 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "./.jest",
+		"types": ["jest", "json-schema", "node", "prettier"]
+	},
+	"include": ["src/**/*.test.ts"],
+	"references": [
+		{
+			"path": "./tsconfig.src.json"
+		}
+	]
+}

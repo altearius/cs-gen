@@ -18,4 +18,3 @@ indent_style = space
 # Markdown and YAML files are better off with spaces.
 [*.{md,yml,yaml}]
 indent_style = space
-

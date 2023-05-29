@@ -1,7 +1,10 @@
 /.data
 /.env
+/.jest
 /dist
 /node_modules
-tsconfig.tsbuildinfo
 /qwerty
+/qwerty2
 /src/generate/*.d.ts
+tsconfig.*.tsbuildinfo
+tsconfig.tsbuildinfo

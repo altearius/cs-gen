@@ -30,7 +30,7 @@
   "private": false,
   "scripts": {
     "build": "tsc -b ./tsconfig.json",
-    "clean": "rm -rf ./dist ./tsconfig.tsbuildinfo ./src/generate/*.d.ts",
+    "clean": "rm -rf ./dist ./tsconfig.tsbuildinfo ./tsconfig.*.tsbuildinfo ./src/generate/*.d.ts",
     "lint": "eslint .",
     "postbuild": "cp src/generate/*.schema.json dist/generate",
     "prebuild": "json2ts -i src/generate/GetAllContentTypesResponse.schema.json -o src/generate/IGetAllContentTypesResponse.d.ts",

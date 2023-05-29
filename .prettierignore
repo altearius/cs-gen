@@ -1,3 +1,4 @@
 /.data
+/.jest
 /dist
 /node_modules
