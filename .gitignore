@@ -6,5 +6,5 @@
 /qwerty
 /qwerty2
 /src/generate/*.d.ts
-tsconfig.*.tsbuildinfo
+tsconfig.src.tsbuildinfo
 tsconfig.tsbuildinfo

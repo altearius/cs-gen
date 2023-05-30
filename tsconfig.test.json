@@ -1,10 +1,12 @@
 {
 	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
-		"outDir": "./.jest",
-		"types": ["jest", "json-schema", "node", "prettier"]
+		"outDir": "./.jest/dist",
+		"paths": {
+			"#src/*": ["./src/*"]
+		}
 	},
-	"include": ["src/**/*.test.ts"],
+	"include": ["src/**/*.test.ts", "src/jest.config.ts"],
 	"references": [
 		{
 			"path": "./tsconfig.src.json"

@@ -27,7 +27,11 @@ settings:
     typescript:
       project:
         - ./tsconfig.json
+        - ./tsconfig.src.json
+        - ./tsconfig.test.json
 
 parserOptions:
   project:
     - ./tsconfig.json
+    - ./tsconfig.src.json
+    - ./tsconfig.test.json
