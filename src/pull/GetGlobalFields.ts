@@ -3,7 +3,7 @@ import type ExecutionContext from '../services/ExecutionContext.js';
 import { BuildContentTypeResponseValidator } from './BuildContentTypeResponseValidator.js';
 import ContentTypeQuery from './ContentTypeQuery.js';
 
-export default async function GetContentTypes(ctx: ExecutionContext) {
+export default async function GetGlobalFields(ctx: ExecutionContext) {
 	const types = [];
 	const validator = await BuildContentTypeResponseValidator();
 	const query = new ContentTypeQuery(ctx, validator);

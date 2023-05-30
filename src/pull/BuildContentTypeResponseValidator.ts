@@ -6,7 +6,7 @@ import Ajv from 'ajv';
 import type { IGetAllContentTypesResponse } from './IGetAllContentTypesResponse';
 import SchemaPath from './SchemaPath.js';
 
-export async function BuildValidator() {
+export async function BuildContentTypeResponseValidator() {
 	const schemaPath = resolve(
 		SchemaPath(),
 		'GetAllContentTypesResponse.schema.json'
