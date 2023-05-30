@@ -33,8 +33,8 @@
     "build": "tsc -b ./tsconfig.json",
     "clean": "rm -rf ./.jest ./dist ./tsconfig.src.tsbuildinfo ./src/generate/*.d.ts",
     "lint": "eslint .",
-    "postbuild": "cp src/generate/*.schema.json dist/generate",
-    "prebuild": "json2ts -i src/generate/GetAllContentTypesResponse.schema.json -o src/generate/IGetAllContentTypesResponse.d.ts",
+    "postbuild": "cp src/pull/*.schema.json dist/pull",
+    "prebuild": "json2ts -i src/pull/GetAllContentTypesResponse.schema.json -o src/pull/IGetAllContentTypesResponse.d.ts",
     "pretest": "yarn build",
     "pretty": "prettier . --check",
     "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/dist/jest.config.js"

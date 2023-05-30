@@ -143,7 +143,6 @@
 				}
 			]
 		},
-		"format-field": { "type": "string" },
 		"global-content-field": {
 			"allOf": [
 				{ "$ref": "#/definitions/base-content-field" },
@@ -194,9 +193,7 @@
 							"enum": ["json"],
 							"type": "string"
 						},
-						"format": {
-							"$ref": "#/definitions/format-field"
-						}
+						"format": { "type": "string" }
 					},
 					"required": ["data_type"],
 					"type": "object"
@@ -222,21 +219,15 @@
 		},
 		"number-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
 							"enum": ["number"],
 							"type": "string"
 						},
-						"max": {
-							"type": "number"
-						},
-						"min": {
-							"type": "number"
-						}
+						"max": { "type": ["number", "null"] },
+						"min": { "type": ["number", "null"] }
 					},
 					"required": ["data_type"],
 					"type": "object"
@@ -245,9 +236,7 @@
 		},
 		"reference-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -255,9 +244,7 @@
 							"type": "string"
 						},
 						"reference_to": {
-							"items": {
-								"type": "string"
-							},
+							"items": { "type": "string" },
 							"type": "array"
 						}
 					},
@@ -268,9 +255,7 @@
 		},
 		"text-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -279,19 +264,13 @@
 						},
 						"enum": {
 							"properties": {
-								"advanced": {
-									"type": "boolean"
-								},
+								"advanced": { "type": "boolean" },
 								"choices": {
 									"items": {
 										"additionalProperties": false,
 										"properties": {
-											"key": {
-												"type": "string"
-											},
-											"value": {
-												"type": "string"
-											}
+											"key": { "type": "string" },
+											"value": { "type": "string" }
 										},
 										"required": ["value"],
 										"type": "object"
@@ -302,21 +281,11 @@
 							"required": ["advanced", "choices"],
 							"type": "object"
 						},
-						"format": {
-							"$ref": "#/definitions/format-field"
-						},
-						"max": {
-							"type": "number"
-						},
-						"max_instance": {
-							"type": "number"
-						},
-						"min": {
-							"type": "number"
-						},
-						"min_instance": {
-							"type": "number"
-						}
+						"format": { "type": "string" },
+						"max": { "type": "number" },
+						"max_instance": { "type": "number" },
+						"min": { "type": "number" },
+						"min_instance": { "type": "number" }
 					},
 					"required": ["data_type"],
 					"type": "object"
@@ -326,14 +295,10 @@
 	},
 	"properties": {
 		"content_types": {
-			"items": {
-				"$ref": "#/definitions/content-type"
-			},
+			"items": { "$ref": "#/definitions/content-type" },
 			"type": "array"
 		},
-		"count": {
-			"type": "number"
-		}
+		"count": { "type": "number" }
 	},
 	"required": ["content_types"],
 	"type": "object"

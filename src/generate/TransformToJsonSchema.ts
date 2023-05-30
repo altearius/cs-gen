@@ -76,11 +76,11 @@ function dateSchemaFor(field: IContentstackDateField) {
 function numberSchemaFor({ min, max }: IContentstackNumberField) {
 	const schema = S.number();
 
-	if (min !== undefined) {
+	if (min !== undefined && min !== null) {
 		schema.minimum(min);
 	}
 
-	if (max !== undefined) {
+	if (max !== undefined && max !== null) {
 		schema.maximum(max);
 	}
 
@@ -240,7 +240,8 @@ class SchemaContext {
 				return dateSchemaFor(field);
 
 			case 'json':
-				throw new Error("Can't find documentation for this one.");
+				console.warn('Cannot find documentation for JSON types.');
+				return S.object();
 
 			case 'number':
 				return numberSchemaFor(field);

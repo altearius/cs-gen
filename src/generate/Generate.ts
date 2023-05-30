@@ -1,6 +1,6 @@
+import PullSchemaFromContentstack from '../pull/PullSchemaFromContentstack.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import PullSchemaFromContentstack from './PullSchemaFromContentstack.js';
 import TransformToInterface from './TransformToInterface.js';
 import TransformToJsonSchema from './TransformToJsonSchema.js';
 import TransformToValidation from './TransformToValidation.js';

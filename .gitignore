@@ -5,6 +5,6 @@
 /node_modules
 /qwerty
 /qwerty2
-/src/generate/*.d.ts
+/src/pull/*.d.ts
 tsconfig.src.tsbuildinfo
 tsconfig.tsbuildinfo
