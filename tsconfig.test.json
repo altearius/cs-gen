@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./.jest/dist",
 		"paths": {
-			"#src/*": ["./src/*"]
+			"#src/*": ["../src/*"]
 		}
 	},
 	"include": ["src/**/*.test.ts", "src/jest.config.ts"],

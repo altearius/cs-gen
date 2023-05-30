@@ -35,3 +35,10 @@ parserOptions:
     - ./tsconfig.json
     - ./tsconfig.src.json
     - ./tsconfig.test.json
+
+overrides:
+  - files: ['src/**/*.test.ts']
+    plugins: [jest]
+    extends: ['plugin:jest/recommended']
+    rules:
+      '@typescript-eslint/no-non-null-assertion': off

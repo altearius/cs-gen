@@ -197,7 +197,9 @@ class SchemaContext {
 		const typedSchema = this.typedSchemaFor(field);
 		addBasePropertiesFrom(field).to(typedSchema);
 
-		if (field.multiple) {
+		// The "blocks" type is always an array and handles the "multiple" property
+		// itself.
+		if (field.multiple && field.data_type !== 'blocks') {
 			return S.array().items(typedSchema);
 		}
 
