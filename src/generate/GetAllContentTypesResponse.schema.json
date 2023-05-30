@@ -3,38 +3,20 @@
 	"definitions": {
 		"base-content-field": {
 			"properties": {
-				"data_type": {
-					"type": "string"
-				},
-				"display_name": {
-					"type": "string"
-				},
-				"extension_uid": {
-					"type": "string"
-				},
+				"data_type": { "type": "string" },
+				"display_name": { "type": "string" },
+				"extension_uid": { "type": "string" },
 				"field_metadata": {
 					"properties": {
-						"description": {
-							"type": "string"
-						}
+						"description": { "type": "string" }
 					},
 					"type": "object"
 				},
-				"mandatory": {
-					"type": "boolean"
-				},
-				"multiple": {
-					"type": "boolean"
-				},
-				"non_localizable": {
-					"type": "boolean"
-				},
-				"uid": {
-					"type": "string"
-				},
-				"unique": {
-					"type": "boolean"
-				}
+				"mandatory": { "type": "boolean" },
+				"multiple": { "type": "boolean" },
+				"non_localizable": { "type": "boolean" },
+				"uid": { "type": "string" },
+				"unique": { "type": "boolean" }
 			},
 			"required": [
 				"data_type",
@@ -49,29 +31,19 @@
 		},
 		"blocks-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"blocks": {
 							"items": {
 								"properties": {
-									"reference_to": {
-										"type": "string"
-									},
+									"reference_to": { "type": "string" },
 									"schema": {
-										"items": {
-											"$ref": "#/definitions/content-field"
-										},
+										"items": { "$ref": "#/definitions/content-field" },
 										"type": "array"
 									},
-									"title": {
-										"type": "string"
-									},
-									"uid": {
-										"type": "string"
-									}
+									"title": { "type": "string" },
+									"uid": { "type": "string" }
 								},
 								"required": ["schema", "title", "uid"],
 								"type": "object"
@@ -94,9 +66,7 @@
 		},
 		"boolean-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -111,67 +81,35 @@
 		},
 		"content-field": {
 			"oneOf": [
-				{
-					"$ref": "#/definitions/blocks-content-field"
-				},
-				{
-					"$ref": "#/definitions/boolean-content-field"
-				},
-				{
-					"$ref": "#/definitions/date-content-field"
-				},
-				{
-					"$ref": "#/definitions/file-content-field"
-				},
-				{
-					"$ref": "#/definitions/global-content-field"
-				},
-				{
-					"$ref": "#/definitions/group-content-field"
-				},
-				{
-					"$ref": "#/definitions/json-content-field"
-				},
-				{
-					"$ref": "#/definitions/link-content-field"
-				},
-				{
-					"$ref": "#/definitions/number-content-field"
-				},
-				{
-					"$ref": "#/definitions/reference-content-field"
-				},
-				{
-					"$ref": "#/definitions/text-content-field"
-				}
+				{ "$ref": "#/definitions/blocks-content-field" },
+				{ "$ref": "#/definitions/boolean-content-field" },
+				{ "$ref": "#/definitions/date-content-field" },
+				{ "$ref": "#/definitions/file-content-field" },
+				{ "$ref": "#/definitions/global-content-field" },
+				{ "$ref": "#/definitions/group-content-field" },
+				{ "$ref": "#/definitions/json-content-field" },
+				{ "$ref": "#/definitions/link-content-field" },
+				{ "$ref": "#/definitions/number-content-field" },
+				{ "$ref": "#/definitions/reference-content-field" },
+				{ "$ref": "#/definitions/text-content-field" }
 			]
 		},
 		"content-type": {
 			"properties": {
-				"description": {
-					"type": "string"
-				},
+				"description": { "type": "string" },
 				"schema": {
-					"items": {
-						"$ref": "#/definitions/content-field"
-					},
+					"items": { "$ref": "#/definitions/content-field" },
 					"type": "array"
 				},
-				"title": {
-					"type": "string"
-				},
-				"uid": {
-					"type": "string"
-				}
+				"title": { "type": "string" },
+				"uid": { "type": "string" }
 			},
 			"required": ["uid", "title", "schema"],
 			"type": "object"
 		},
 		"date-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -180,9 +118,7 @@
 						},
 						"field_metadata": {
 							"properties": {
-								"hide_time": {
-									"type": "boolean"
-								}
+								"hide_time": { "type": "boolean" }
 							},
 							"type": "object"
 						}
@@ -194,9 +130,7 @@
 		},
 		"file-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -209,27 +143,19 @@
 				}
 			]
 		},
-		"format-field": {
-			"type": "string"
-		},
+		"format-field": { "type": "string" },
 		"global-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
 							"enum": ["global_field"],
 							"type": "string"
 						},
-						"reference_to": {
-							"type": "string"
-						},
+						"reference_to": { "type": "string" },
 						"schema": {
-							"items": {
-								"$ref": "#/definitions/content-field"
-							},
+							"items": { "$ref": "#/definitions/content-field" },
 							"type": "array"
 						}
 					},
@@ -240,9 +166,7 @@
 		},
 		"group-content-field": {
 			"allOf": [
-				{
-					"$ref": "#/definitions/base-content-field"
-				},
+				{ "$ref": "#/definitions/base-content-field" },
 				{
 					"properties": {
 						"data_type": {
@@ -250,9 +174,7 @@
 							"type": "string"
 						},
 						"schema": {
-							"items": {
-								"$ref": "#/definitions/content-field"
-							},
+							"items": { "$ref": "#/definitions/content-field" },
 							"type": "array"
 						}
 					},
