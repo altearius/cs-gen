@@ -1,12 +1,12 @@
 {
-	"$id": "IGetAllContentTypesResponse",
+	"$id": "IGetAllGlobalFieldsResponse",
 	"definitions": {
 		"IContentField": {
 			"$ref": "./ContentField.schema.json#/definitions/IContentField"
 		}
 	},
 	"properties": {
-		"content_types": {
+		"global_fields": {
 			"items": {
 				"properties": {
 					"description": { "type": "string" },
@@ -24,6 +24,6 @@
 		},
 		"count": { "type": "number" }
 	},
-	"required": ["content_types"],
+	"required": ["global_fields"],
 	"type": "object"
 }

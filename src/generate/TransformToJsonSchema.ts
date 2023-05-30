@@ -10,24 +10,28 @@ import type {
 } from 'fluent-json-schema';
 import S from 'fluent-json-schema';
 
-import type ExecutionContext from '../services/ExecutionContext.js';
-
 import type {
-	BlocksContentField as IContentstackBlockField,
-	ContentType as IContentstackContentType,
-	DateContentField as IContentstackDateField,
-	ContentField as IContentstackField,
-	GroupContentField as IContentstackGroupField,
-	NumberContentField as IContentstackNumberField,
-	ReferenceContentField as IContentstackReferenceField,
-	TextContentField as IContentstackTextField
-} from './IGetAllContentTypesResponse.js';
+	IBlocksContentField,
+	IContentField,
+	IDateContentField,
+	IGroupContentField,
+	INumberContentField,
+	IReferenceContentField,
+	ITextContentField
+} from '../pull/ContentField.schema.js';
+import type ExecutionContext from '../services/ExecutionContext.js';
 
 type ISchema = Exclude<JSONSchema, ExtendedSchema | NullSchema> | ObjectSchema;
 
+interface IContentType {
+	readonly schema: IContentField[];
+	readonly title: string;
+	readonly uid: string;
+}
+
 export default async function TransformToJsonSchema(
 	ctx: ExecutionContext,
-	contentstackSchema: readonly IContentstackContentType[]
+	contentstackSchema: ReadonlySet<IContentType>
 ) {
 	const schema = new SchemaContext();
 	const schemaPath = join(ctx.paths.workingDirectory, 'schema.json');
@@ -52,7 +56,7 @@ export default async function TransformToJsonSchema(
 function addBasePropertiesFrom({
 	display_name: title,
 	field_metadata: { description } = {}
-}: IContentstackField) {
+}: IContentField) {
 	return {
 		to: (fieldSchema: ISchema) => {
 			if (title) {
@@ -66,14 +70,14 @@ function addBasePropertiesFrom({
 	};
 }
 
-function dateSchemaFor(field: IContentstackDateField) {
+function dateSchemaFor(field: IDateContentField) {
 	const schema = S.string();
 	const format = field.field_metadata?.hide_time ? 'date' : 'date-time';
 	schema.format(format);
 	return schema;
 }
 
-function numberSchemaFor({ min, max }: IContentstackNumberField) {
+function numberSchemaFor({ min, max }: INumberContentField) {
 	const schema = S.number();
 
 	if (min !== undefined && min !== null) {
@@ -87,7 +91,7 @@ function numberSchemaFor({ min, max }: IContentstackNumberField) {
 	return schema;
 }
 
-function referenceSchemaFor(field: IContentstackReferenceField) {
+function referenceSchemaFor(field: IReferenceContentField) {
 	const schema = S.array();
 
 	const contentTypeUid = S.string();
@@ -102,7 +106,7 @@ function referenceSchemaFor(field: IContentstackReferenceField) {
 	return schema;
 }
 
-function textSchemaFor(field: IContentstackTextField) {
+function textSchemaFor(field: ITextContentField) {
 	const schema = S.string();
 
 	if (field.min !== undefined && field.min > 0) {
@@ -139,7 +143,7 @@ class SchemaContext {
 		this.builder.definition(name, schema);
 	}
 
-	public addFields(fields: readonly IContentstackField[]) {
+	public addFields(fields: readonly IContentField[]) {
 		return {
 			to: (definition: ObjectSchema) => {
 				for (const field of fields) {
@@ -151,7 +155,7 @@ class SchemaContext {
 		};
 	}
 
-	public blockSchemaFor(field: IContentstackBlockField) {
+	public blockSchemaFor(field: IBlocksContentField) {
 		const schema = S.array();
 
 		const items: ExtendedSchema[] = [];
@@ -193,7 +197,7 @@ class SchemaContext {
 		return schema.items(S.object().oneOf(items));
 	}
 
-	public fieldSchemaFor(field: IContentstackField): ISchema {
+	public fieldSchemaFor(field: IContentField): ISchema {
 		const typedSchema = this.typedSchemaFor(field);
 		addBasePropertiesFrom(field).to(typedSchema);
 
@@ -216,7 +220,7 @@ class SchemaContext {
 		return jsonSchema;
 	}
 
-	private typedSchemaFor(field: IContentstackField): ISchema {
+	private typedSchemaFor(field: IContentField): ISchema {
 		switch (field.data_type) {
 			case 'blocks':
 				return this.blockSchemaFor(field);
@@ -257,7 +261,7 @@ class SchemaContext {
 		}
 	}
 
-	private groupSchemaFor(field: IContentstackGroupField) {
+	private groupSchemaFor(field: IGroupContentField) {
 		const schema = S.object();
 		this.addFields(field.schema).to(schema);
 		return schema;

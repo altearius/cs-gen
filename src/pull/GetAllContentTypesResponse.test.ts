@@ -5,7 +5,7 @@ import { inspect } from 'node:util';
 import { describe, expect, it } from '@jest/globals';
 import Ajv from 'ajv';
 
-import type { IGetAllContentTypesResponse } from '#src/generate/IGetAllContentTypesResponse';
+import type { IGetAllContentTypesResponse } from '#src/pull/GetAllContentTypesResponse.schema';
 
 describe('GetAllContentTypesResponse.schema', () => {
 	it('should validate known-good JSON', async () => {

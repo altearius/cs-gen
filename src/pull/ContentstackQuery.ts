@@ -4,18 +4,24 @@ import type { ValidateFunction } from 'ajv';
 
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import type {
-	ContentType as IContentstackContentType,
-	IGetAllContentTypesResponse
-} from './IGetAllContentTypesResponse';
+import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';
 
-export default class ContentTypeQuery {
-	public constructor(
+type IContentType = IGetAllContentTypesResponse['content_types'][number];
+
+interface IResponse {
+	readonly [k: string]: unknown;
+	readonly count?: number;
+}
+
+export default abstract class ContentstackQuery<TResponse extends IResponse> {
+	protected abstract readonly _relativePath: string;
+
+	protected constructor(
 		private readonly _ctx: ExecutionContext,
-		private readonly _validator: ValidateFunction<IGetAllContentTypesResponse>
+		private readonly _validator: ValidateFunction<TResponse>
 	) {}
 
-	public async *getAll(): AsyncGenerator<IContentstackContentType> {
+	public async *getAll(): AsyncGenerator<IContentType> {
 		const limit = 100;
 		let cursor = 0;
 
@@ -26,19 +32,20 @@ export default class ContentTypeQuery {
 			throw new Error('Expected count to be defined');
 		}
 
-		for (const item of firstBatch.content_types) {
+		for (const item of this.accessResponseContent(firstBatch)) {
 			cursor += 1;
 			yield item;
 		}
 
 		while (cursor < count) {
-			const { content_types: types } = await this.getBatch(cursor, limit);
-			for (const item of types) {
+			const batch = await this.getBatch(cursor, limit);
+			const items = this.accessResponseContent(batch);
+			for (const item of items) {
 				cursor += 1;
 				yield item;
 			}
 
-			if (types.length === 0) {
+			if (items.length === 0) {
 				console.warn('Received empty batch');
 				break;
 			}
@@ -47,6 +54,7 @@ export default class ContentTypeQuery {
 
 	private async getBatch(skip: number, limit: number) {
 		const url = this.endpoint(skip, limit);
+
 		const response = await fetch(url.toString(), {
 			headers: {
 				// Justification: This is the header name Contentstack expects.
@@ -77,9 +85,9 @@ export default class ContentTypeQuery {
 	}
 
 	private endpoint(skip: number, limit: number) {
-		const relativePath = '/v3/content_types';
 		const qs = new URLSearchParams();
-		qs.set('include_global_field_schema', 'true');
+		this.mutateQueryString(qs);
+
 		qs.set('limit', limit.toString());
 
 		if (skip > 0) {
@@ -88,7 +96,10 @@ export default class ContentTypeQuery {
 			qs.set('include_count', 'true');
 		}
 
-		const relative = `${relativePath}?${qs.toString()}`;
+		const relative = `${this._relativePath}?${qs.toString()}`;
 		return new URL(relative, this._ctx.baseUrl);
 	}
+
+	protected abstract mutateQueryString(qs: URLSearchParams): void;
+	protected abstract accessResponseContent(response: TResponse): IContentType[];
 }

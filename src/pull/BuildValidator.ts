@@ -3,14 +3,10 @@ import { resolve } from 'node:path';
 
 import Ajv from 'ajv';
 
-import type { IGetAllContentTypesResponse } from './IGetAllContentTypesResponse';
 import SchemaPath from './SchemaPath.js';
 
-export async function BuildContentTypeResponseValidator() {
-	const schemaPath = resolve(
-		SchemaPath(),
-		'GetAllContentTypesResponse.schema.json'
-	);
+export async function BuildValidator<T>(schemaName: string) {
+	const schemaPath = resolve(SchemaPath(), `${schemaName}.schema.json`);
 
 	const rawSchema = await readFile(schemaPath, 'utf8');
 	const parsed = JSON.parse(rawSchema) as unknown;
@@ -19,5 +15,5 @@ export async function BuildContentTypeResponseValidator() {
 	}
 
 	const ajv = new Ajv();
-	return ajv.compile<IGetAllContentTypesResponse>(parsed);
+	return ajv.compile<T>(parsed);
 }

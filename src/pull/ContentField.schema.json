@@ -1,0 +1,279 @@
+{
+	"$id": "IContentstackObject",
+	"definitions": {
+		"IBaseContentField": {
+			"properties": {
+				"data_type": { "type": "string" },
+				"display_name": { "type": "string" },
+				"extension_uid": { "type": "string" },
+				"field_metadata": {
+					"properties": {
+						"description": { "type": "string" }
+					},
+					"type": "object"
+				},
+				"mandatory": { "type": "boolean" },
+				"multiple": { "type": "boolean" },
+				"non_localizable": { "type": "boolean" },
+				"uid": { "type": "string" },
+				"unique": { "type": "boolean" }
+			},
+			"required": [
+				"data_type",
+				"display_name",
+				"mandatory",
+				"multiple",
+				"non_localizable",
+				"uid",
+				"unique"
+			],
+			"type": "object"
+		},
+		"IBlocksContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"blocks": {
+							"items": {
+								"properties": {
+									"reference_to": { "type": "string" },
+									"schema": {
+										"items": { "$ref": "#/definitions/IContentField" },
+										"type": "array"
+									},
+									"title": { "type": "string" },
+									"uid": { "type": "string" }
+								},
+								"required": ["schema", "title", "uid"],
+								"type": "object"
+							},
+							"type": "array"
+						},
+						"data_type": {
+							"enum": ["blocks"],
+							"type": "string"
+						},
+						"multiple": {
+							"enum": [true],
+							"type": "boolean"
+						}
+					},
+					"required": ["blocks", "data_type", "multiple"],
+					"type": "object"
+				}
+			]
+		},
+		"IBooleanContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["boolean"],
+							"type": "string"
+						}
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"IContentField": {
+			"anyOf": [
+				{ "$ref": "#/definitions/IBlocksContentField" },
+				{ "$ref": "#/definitions/IBooleanContentField" },
+				{ "$ref": "#/definitions/IDateContentField" },
+				{ "$ref": "#/definitions/IFileContentField" },
+				{ "$ref": "#/definitions/IGlobalContentField" },
+				{ "$ref": "#/definitions/IGroupContentField" },
+				{ "$ref": "#/definitions/IJsonContentField" },
+				{ "$ref": "#/definitions/ILinkContentField" },
+				{ "$ref": "#/definitions/INumberContentField" },
+				{ "$ref": "#/definitions/IReferenceContentField" },
+				{ "$ref": "#/definitions/ITextContentField" }
+			]
+		},
+		"IDateContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["isodate"],
+							"type": "string"
+						},
+						"field_metadata": {
+							"properties": {
+								"hide_time": { "type": "boolean" }
+							},
+							"type": "object"
+						}
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"IFileContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["file"],
+							"type": "string"
+						}
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"IGlobalContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["global_field"],
+							"type": "string"
+						},
+						"reference_to": { "type": "string" },
+						"schema": {
+							"items": { "$ref": "#/definitions/IContentField" },
+							"type": "array"
+						}
+					},
+					"required": ["data_type", "reference_to", "schema"],
+					"type": "object"
+				}
+			]
+		},
+		"IGroupContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["group"],
+							"type": "string"
+						},
+						"schema": {
+							"items": { "$ref": "#/definitions/IContentField" },
+							"type": "array"
+						}
+					},
+					"required": ["data_type", "schema"],
+					"type": "object"
+				}
+			]
+		},
+		"IJsonContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["json"],
+							"type": "string"
+						},
+						"format": { "type": "string" }
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"ILinkContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["link"],
+							"type": "string"
+						}
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"INumberContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["number"],
+							"type": "string"
+						},
+						"max": { "type": ["number", "null"] },
+						"min": { "type": ["number", "null"] }
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"IReferenceContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["reference"],
+							"type": "string"
+						},
+						"reference_to": {
+							"items": { "type": "string" },
+							"type": "array"
+						}
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		},
+		"ITextContentField": {
+			"allOf": [
+				{ "$ref": "#/definitions/IBaseContentField" },
+				{
+					"properties": {
+						"data_type": {
+							"enum": ["text"],
+							"type": "string"
+						},
+						"enum": {
+							"properties": {
+								"advanced": { "type": "boolean" },
+								"choices": {
+									"items": {
+										"additionalProperties": false,
+										"properties": {
+											"key": { "type": "string" },
+											"value": { "type": "string" }
+										},
+										"required": ["value"],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							},
+							"required": ["advanced", "choices"],
+							"type": "object"
+						},
+						"format": { "type": "string" },
+						"max": { "type": "number" },
+						"max_instance": { "type": "number" },
+						"min": { "type": "number" },
+						"min_instance": { "type": "number" }
+					},
+					"required": ["data_type"],
+					"type": "object"
+				}
+			]
+		}
+	}
+}

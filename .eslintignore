@@ -1,3 +1,4 @@
 /.jest
 /dist
 /node_modules
+/src/pull/*.schema.d.ts
