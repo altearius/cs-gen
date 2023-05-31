@@ -9,7 +9,7 @@ import type { IGetAllGlobalFieldsResponse } from './GetAllGlobalFieldsResponse.s
 type IContentType = IGetAllContentTypesResponse['content_types'][number];
 
 export default class GlobalFieldsQuery extends ContentstackQuery<IGetAllGlobalFieldsResponse> {
-	protected readonly _relativePath = '/v3/content_types';
+	protected readonly _relativePath = '/v3/global_fields';
 
 	public constructor(
 		_ctx: ExecutionContext,

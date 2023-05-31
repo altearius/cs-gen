@@ -80,7 +80,8 @@
 			]
 		},
 		"IContentField": {
-			"anyOf": [
+			"type": "object",
+			"oneOf": [
 				{ "$ref": "#/definitions/IBlocksContentField" },
 				{ "$ref": "#/definitions/IBooleanContentField" },
 				{ "$ref": "#/definitions/IDateContentField" },

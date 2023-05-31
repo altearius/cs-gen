@@ -1,19 +1,45 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
+import type { AnySchemaObject } from 'ajv';
 import Ajv from 'ajv';
 
 import SchemaPath from './SchemaPath.js';
 
 export async function BuildValidator<T>(schemaName: string) {
-	const schemaPath = resolve(SchemaPath(), `${schemaName}.schema.json`);
+	const [schema, contentFieldSchema] = await Promise.all([
+		readSchemaFile(schemaName),
+		readContentFieldSchema()
+	]);
 
-	const rawSchema = await readFile(schemaPath, 'utf8');
-	const parsed = JSON.parse(rawSchema) as unknown;
+	const ajv = new Ajv({
+		discriminator: true,
+		loadSchema: async (uri) => {
+			if (uri === 'ContentField.schema.json') {
+				return contentFieldSchema;
+			}
+
+			throw new Error(`Unknown schema: ${uri}`);
+		}
+	});
+
+	return ajv.compileAsync<T>(schema);
+}
+
+async function readSchemaFile(name: string): Promise<AnySchemaObject> {
+	const schemaPath = resolve(SchemaPath(), `${name}.schema.json`);
+	const raw = await readFile(schemaPath, 'utf8');
+	const parsed = JSON.parse(raw) as unknown;
+
 	if (typeof parsed !== 'object' || parsed === null) {
 		throw new Error('Schema is not an object');
 	}
 
-	const ajv = new Ajv();
-	return ajv.compile<T>(parsed);
+	return parsed;
+}
+
+let contentFieldSchema: Promise<AnySchemaObject> | undefined;
+
+async function readContentFieldSchema() {
+	return (contentFieldSchema ??= readSchemaFile('ContentField'));
 }

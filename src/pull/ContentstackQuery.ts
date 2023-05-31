@@ -78,6 +78,8 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 				depth: 10
 			});
 
+			console.log(inspect(body, { colors: true, depth: 2 }));
+
 			throw new Error(`Response body failed validation: ${errors}`);
 		}
 

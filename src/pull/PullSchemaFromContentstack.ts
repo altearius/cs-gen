@@ -24,5 +24,7 @@ export default async function PullSchemaFromContentstack(
 		map.set(global.uid, global);
 	}
 
+	console.log('known types', map.keys());
+
 	return new Set(map.values());
 }
