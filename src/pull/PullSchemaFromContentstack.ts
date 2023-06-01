@@ -1,10 +1,8 @@
+import IContentType from '../models/IContentType.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';
 import GetContentTypes from './GetContentTypes.js';
 import GetGlobalFields from './GetGlobalFields.js';
-
-type IContentType = IGetAllContentTypesResponse['content_types'][number];
 
 export default async function PullSchemaFromContentstack(
 	ctx: ExecutionContext
@@ -14,17 +12,14 @@ export default async function PullSchemaFromContentstack(
 		GetGlobalFields(ctx)
 	]);
 
-	const map = new Map<string, IContentType>();
+	const map = [...types, ...globals].reduce((map, type) => {
+		if (map.has(type.uid)) {
+			throw new Error(`Duplicate content type UID: ${type.uid}`);
+		}
 
-	for (const type of types) {
 		map.set(type.uid, type);
-	}
-
-	for (const global of globals) {
-		map.set(global.uid, global);
-	}
-
-	console.log('known types', map.keys());
+		return map;
+	}, new Map<string, IContentType>());
 
 	return new Set(map.values());
 }

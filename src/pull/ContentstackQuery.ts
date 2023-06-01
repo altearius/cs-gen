@@ -2,11 +2,8 @@ import { inspect } from 'node:util';
 
 import type { ValidateFunction } from 'ajv';
 
+import type IContentType from '../models/IContentType.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
-
-import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';
-
-type IContentType = IGetAllContentTypesResponse['content_types'][number];
 
 interface IResponse {
 	readonly [k: string]: unknown;

@@ -10,7 +10,10 @@ export default async function TransformToInterface(
 	ctx: ExecutionContext,
 	jsonSchema: JSONSchema4
 ) {
-	const result = await compile(jsonSchema, 'TODO');
+	const result = await compile(jsonSchema, 'TODO', {
+		unreachableDefinitions: true
+	});
+
 	const resultPath = join(ctx.paths.workingDirectory, '/schema.d.ts');
 	await writeFile(resultPath, result, 'utf-8');
 }
