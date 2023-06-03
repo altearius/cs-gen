@@ -1,11 +1,10 @@
 import type { ValidateFunction } from 'ajv';
 
+import type IContentType from '../models/IContentType.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import IContentType from '../models/IContentType.js';
 import ContentstackQuery from './ContentstackQuery.js';
 import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';
-
 
 export default class ContentTypesQuery extends ContentstackQuery<IGetAllContentTypesResponse> {
 	protected readonly _relativePath = '/v3/content_types';

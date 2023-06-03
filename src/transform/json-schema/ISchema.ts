@@ -7,4 +7,3 @@ import type {
 
 type ISchema = Exclude<JSONSchema, ExtendedSchema | NullSchema> | ObjectSchema;
 export default ISchema;
-

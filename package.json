@@ -32,6 +32,7 @@
   "scripts": {
     "build": "tsc -b ./tsconfig.json",
     "clean": "rm -rf ./.jest ./dist ./tsconfig.src.tsbuildinfo ./src/pull/*.schema.d.ts",
+    "cs-gen": "node --enable-source-maps ./dist/index.js",
     "lint": "eslint .",
     "postbuild": "cp src/pull/*.schema.json dist/pull",
     "prebuild": "./build/generate-types.sh",

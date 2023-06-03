@@ -1,8 +1,8 @@
 import type { ValidateFunction } from 'ajv';
 
+import type IContentType from '../models/IContentType.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
 
-import IContentType from '../models/IContentType.js';
 import ContentstackQuery from './ContentstackQuery.js';
 import type { IGetAllGlobalFieldsResponse } from './GetAllGlobalFieldsResponse.schema.js';
 

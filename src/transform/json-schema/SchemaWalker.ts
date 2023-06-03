@@ -93,10 +93,7 @@ export default class SchemaWalker {
 		const name = this.getOrCreateLinkDefinition();
 		const ref = S.object().ref(`#/definitions/${name}`);
 		const base = field.multiple ? S.array().items(ref) : ref;
-
-		return base
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(base);
 	}
 
 	private processTextField(field: ITextContentField) {
@@ -122,21 +119,18 @@ export default class SchemaWalker {
 			schema = S.array().items(schema);
 		}
 
-		return schema
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(schema);
 	}
 
 	private processReferenceField(field: IReferenceContentField) {
-		return S.array()
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '')
-			.items(
-				S.object()
-					.prop('uid', S.string())
-					.prop('_content_type_uid', S.string().enum(field.reference_to ?? []))
-					.required(['uid', '_content_type_uid'])
-			);
+		const ref = S.array().items(
+			S.object()
+				.prop('uid', S.string())
+				.prop('_content_type_uid', S.string().enum(field.reference_to ?? []))
+				.required(['uid', '_content_type_uid'])
+		);
+
+		return applyBaseFieldsFrom(field).to(ref);
 	}
 
 	private processNumberField(field: INumberContentField) {
@@ -155,37 +149,26 @@ export default class SchemaWalker {
 			schema = S.array().items(schema);
 		}
 
-		return schema
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(schema);
 	}
 
 	private processBooleanField(field: IBooleanContentField): ISchema {
 		const boolean = S.boolean();
 		const base = field.multiple ? S.array().items(boolean) : boolean;
-
-		return base
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(base);
 	}
 
 	private processGlobalField(field: IGlobalContentField): ISchema {
 		const ref = S.object().ref(`#/definitions/${field.reference_to}`);
 		const base = field.multiple ? S.array().items(ref) : ref;
-
-		return base
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(base);
 	}
 
 	private processIsoDateField(field: IDateContentField) {
 		const format = field.field_metadata?.hide_time ? 'date' : 'date-time';
 		const schema = S.string().format(format);
 		const base = field.multiple ? S.array().items(schema) : schema;
-
-		return base
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(base);
 	}
 
 	private processModularBlocksField(field: IBlocksContentField): ISchema {
@@ -194,10 +177,9 @@ export default class SchemaWalker {
 			return S.object().prop(block.uid, blockSchema);
 		});
 
-		return S.array()
-			.items(S.object().oneOf(possibleBlocks))
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		const blocksContainer = S.object().oneOf(possibleBlocks);
+		const modularBlocks = S.array().items(blocksContainer);
+		return applyBaseFieldsFrom(field).to(modularBlocks);
 	}
 
 	private processModularBlocksBlock(block: IBlock) {
@@ -213,12 +195,13 @@ export default class SchemaWalker {
 		}
 
 		const required = block.schema.filter((x) => x.mandatory).map((x) => x.uid);
-		let blockSchema = S.object().required(required).title(block.title);
 
-		for (const blockField of block.schema) {
-			const fieldSchema = this.processField(blockField);
-			blockSchema = blockSchema.prop(blockField.uid, fieldSchema);
-		}
+		const blockSchema = block.schema.reduce(
+			(blockScheme, blockField) =>
+				blockScheme.prop(blockField.uid, this.processField(blockField)),
+
+			S.object().required(required).title(block.title)
+		);
 
 		return S.object().allOf([
 			S.object().ref(`#/definitions/${metadataName}`),
@@ -230,10 +213,7 @@ export default class SchemaWalker {
 		const name = this.getOrCreateHostedFileDefinition();
 		const ref = S.object().ref(`#/definitions/${name}`);
 		const base = field.multiple ? S.array().items(ref) : ref;
-
-		return base
-			.title(field.display_name)
-			.description(field.field_metadata?.description ?? '');
+		return applyBaseFieldsFrom(field).to(base);
 	}
 
 	private processGroupField(group: IGroupContentField): ISchema {
@@ -278,4 +258,14 @@ export default class SchemaWalker {
 		this._definitions.set(name, created);
 		return created;
 	}
+}
+
+function applyBaseFieldsFrom({
+	field_metadata: { description } = {}
+}: IContentField) {
+	return {
+		to: (schema: ISchema) => {
+			return description ? schema.description(description) : schema;
+		}
+	};
 }

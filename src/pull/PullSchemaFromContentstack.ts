@@ -1,4 +1,4 @@
-import IContentType from '../models/IContentType.js';
+import type IContentType from '../models/IContentType.js';
 import type ExecutionContext from '../services/ExecutionContext.js';
 
 import GetContentTypes from './GetContentTypes.js';
