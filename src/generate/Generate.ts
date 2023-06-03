@@ -5,12 +5,12 @@ import TransformToJsonSchema from '../transform/json-schema/TransformToJsonSchem
 import TransformToInterface from './TransformToInterface.js';
 import TransformToValidation from './TransformToValidation.js';
 
-export default async function Generate(ctx: ExecutionContext) {
+export default async function Generate(ctx: ExecutionContext, prefix: string) {
 	const contentTypes = await PullSchemaFromContentstack(ctx);
 	const jsonSchema = await TransformToJsonSchema(ctx, contentTypes);
 
 	await Promise.all([
-		TransformToInterface(ctx, jsonSchema),
+		TransformToInterface(ctx, jsonSchema, prefix),
 		TransformToValidation(ctx, jsonSchema)
 	]);
 }

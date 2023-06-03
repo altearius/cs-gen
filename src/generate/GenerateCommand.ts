@@ -7,20 +7,26 @@ import Generate from './Generate.js';
 
 const GenerateCommand = new Command('generate');
 
-GenerateCommand.action(async () => {
+GenerateCommand.option(
+	'-p, --prefix <prefix>',
+	'Add a prefix for TypeScript interface names.',
+	'I-'
+);
+
+interface IGenerateOptions {
+	prefix?: string;
+}
+
+GenerateCommand.action(async (options: IGenerateOptions) => {
 	const ctx = await ExecutionContext.create();
 
 	try {
-		await Generate(ctx);
+		await Generate(ctx, options.prefix ?? 'I-');
 	} finally {
 		const removed = await ExecutionContext.removeStaleRuns();
 		const noun = removed.length === 1 ? 'run' : 'runs';
-
-		const msg = `Removed ${c.yellow(
-			removed.length.toLocaleString()
-		)} stale ${noun}.`;
-
-		console.log(msg);
+		const stale = c.yellow(removed.length.toLocaleString());
+		console.log(`Removed ${stale} stale ${noun}.`);
 	}
 });
 

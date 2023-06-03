@@ -91,9 +91,9 @@ export default class SchemaWalker {
 
 	private processLinkField(field: ILinkContentField) {
 		const name = this.getOrCreateLinkDefinition();
-		const ref = S.object().ref(`#/definitions/${name}`);
-		const base = field.multiple ? S.array().items(ref) : ref;
-		return applyBaseFieldsFrom(field).to(base);
+		const ref = S.ref(`#/definitions/${name}`);
+		const multiple = handleMultiple(field, ref);
+		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
 	private processTextField(field: ITextContentField) {
@@ -115,10 +115,7 @@ export default class SchemaWalker {
 			schema = schema.enum(field.enum.choices.map((choice) => choice.value));
 		}
 
-		if (field.multiple) {
-			schema = S.array().items(schema);
-		}
-
+		schema = handleMultiple(field, schema);
 		return applyBaseFieldsFrom(field).to(schema);
 	}
 
@@ -145,30 +142,26 @@ export default class SchemaWalker {
 			schema = schema.maximum(max);
 		}
 
-		if (field.multiple) {
-			schema = S.array().items(schema);
-		}
-
+		schema = handleMultiple(field, schema);
 		return applyBaseFieldsFrom(field).to(schema);
 	}
 
 	private processBooleanField(field: IBooleanContentField): ISchema {
-		const boolean = S.boolean();
-		const base = field.multiple ? S.array().items(boolean) : boolean;
-		return applyBaseFieldsFrom(field).to(base);
+		const schema = handleMultiple(field, S.boolean());
+		return applyBaseFieldsFrom(field).to(schema);
 	}
 
 	private processGlobalField(field: IGlobalContentField): ISchema {
-		const ref = S.object().ref(`#/definitions/${field.reference_to}`);
-		const base = field.multiple ? S.array().items(ref) : ref;
-		return applyBaseFieldsFrom(field).to(base);
+		const ref = S.ref(`#/definitions/${field.reference_to}`);
+		const multiple = handleMultiple(field, ref);
+		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
 	private processIsoDateField(field: IDateContentField) {
 		const format = field.field_metadata?.hide_time ? 'date' : 'date-time';
 		const schema = S.string().format(format);
-		const base = field.multiple ? S.array().items(schema) : schema;
-		return applyBaseFieldsFrom(field).to(base);
+		const multiple = handleMultiple(field, schema);
+		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
 	private processModularBlocksField(field: IBlocksContentField): ISchema {
@@ -188,8 +181,8 @@ export default class SchemaWalker {
 		if (block.reference_to) {
 			return S.object()
 				.allOf([
-					S.object().ref(`#/definitions/${block.reference_to}`),
-					S.object().ref(`#/definitions/${metadataName}`)
+					S.ref(`#/definitions/${block.reference_to}`),
+					S.ref(`#/definitions/${metadataName}`)
 				])
 				.title(block.title);
 		}
@@ -204,27 +197,28 @@ export default class SchemaWalker {
 		);
 
 		return S.object().allOf([
-			S.object().ref(`#/definitions/${metadataName}`),
+			S.ref(`#/definitions/${metadataName}`),
 			blockSchema
 		]);
 	}
 
 	private processFileField(field: IFileContentField): ISchema {
 		const name = this.getOrCreateHostedFileDefinition();
-		const ref = S.object().ref(`#/definitions/${name}`);
-		const base = field.multiple ? S.array().items(ref) : ref;
-		return applyBaseFieldsFrom(field).to(base);
+		const ref = S.ref(`#/definitions/${name}`);
+		const multiple = handleMultiple(field, ref);
+		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
 	private processGroupField(group: IGroupContentField): ISchema {
-		let groupSchema = S.object();
+		let groupSchema: ISchema = S.object();
 
 		for (const field of group.schema) {
 			const fieldSchema = this.processField(field);
 			groupSchema = groupSchema.prop(field.uid, fieldSchema);
 		}
 
-		return groupSchema;
+		groupSchema = handleMultiple(group, groupSchema);
+		return applyBaseFieldsFrom(group).to(groupSchema);
 	}
 
 	private getOrCreateLinkDefinition() {
@@ -261,11 +255,36 @@ export default class SchemaWalker {
 }
 
 function applyBaseFieldsFrom({
+	display_name: title,
 	field_metadata: { description } = {}
 }: IContentField) {
+	const docs =
+		typeof description === 'string' && description.length > 0
+			? description
+			: title;
+
 	return {
 		to: (schema: ISchema) => {
-			return description ? schema.description(description) : schema;
+			return docs ? schema.description(docs) : schema;
 		}
 	};
+}
+
+function handleMultiple(field: IContentField, schema: ISchema) {
+	if (!field.multiple) {
+		return schema;
+	}
+
+	const { min_instance: min, max_instance: max } = field;
+	let array = S.array().items(schema);
+
+	if (typeof min === 'number') {
+		array = array.minItems(min);
+	}
+
+	if (typeof max === 'number') {
+		array = array.maxItems(max);
+	}
+
+	return array;
 }
