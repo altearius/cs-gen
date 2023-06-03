@@ -30,15 +30,15 @@
   "name": "contentstack-type-gen",
   "private": false,
   "scripts": {
-    "build": "tsc -b ./tsconfig.json",
-    "clean": "rm -rf ./.jest ./dist ./tsconfig.src.tsbuildinfo ./src/pull/*.schema.d.ts",
+    "build": "tsc -b ./src/tsconfig.json",
+    "clean": "rm -rf ./.jest ./dist ./src/pull/*.schema.d.ts",
     "cs-gen": "node --enable-source-maps ./dist/index.js",
     "lint": "eslint .",
     "postbuild": "cp src/pull/*.schema.json dist/pull",
     "prebuild": "./build/generate-types.sh",
-    "pretest": "yarn build",
+    "pretest": "tsc -b ./test/tsconfig.json",
     "pretty": "prettier . --check",
-    "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/dist/jest.config.js"
+    "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/tsc/test/jest.config.js"
   },
   "type": "module",
   "version": "1.0.0"

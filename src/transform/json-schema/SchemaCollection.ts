@@ -4,21 +4,16 @@ import ReferenceFinder from './ReferenceFinder.js';
 
 export default class SchemaCollection {
 	private readonly _sorted: readonly IContentType[];
-	private readonly _mapped: ReadonlyMap<string, IContentType>;
 
 	public constructor(contentTypes: ReadonlySet<IContentType>) {
-		this._mapped = mapByUid(contentTypes);
-		this._sorted = sortTopologically(contentTypes, this._mapped);
+		const mapped = mapByUid(contentTypes);
+		this._sorted = sortTopologically(contentTypes, mapped);
 	}
 
 	// Guaranteed to always be in topological order, and that all references
 	// will actually exist.
 	public [Symbol.iterator]() {
 		return this._sorted[Symbol.iterator]();
-	}
-
-	public get(uid: string) {
-		return this._mapped.get(uid);
 	}
 }
 

@@ -18,26 +18,24 @@ extends:
 
 settings:
   import/parsers:
-    '@typescript-eslint/parser':
-      - .ts
-      - .tsx
+    '@typescript-eslint/parser': ['.ts']
 
   import/resolver:
     node: true
     typescript:
       project:
         - ./tsconfig.json
-        - ./tsconfig.src.json
-        - ./tsconfig.test.json
+        - ./src/tsconfig.json
+        - ./test/tsconfig.json
 
 parserOptions:
   project:
     - ./tsconfig.json
-    - ./tsconfig.src.json
-    - ./tsconfig.test.json
+    - ./src/tsconfig.json
+    - ./test/tsconfig.json
 
 overrides:
-  - files: ['src/**/*.test.ts']
+  - files: ['src/**/*.test.ts', 'test/**/*.ts']
     plugins: [jest]
     extends: ['plugin:jest/recommended']
     rules:

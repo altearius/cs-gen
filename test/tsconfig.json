@@ -1,0 +1,16 @@
+{
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "../.jest/tsc",
+		"rootDir": "../",
+		"paths": {
+			"#src/*": ["../src/*"]
+		}
+	},
+	"include": ["../src/**/*.test.ts", "./**/*.ts"],
+	"references": [
+		{
+			"path": "../src/tsconfig.json"
+		}
+	]
+}

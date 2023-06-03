@@ -5,7 +5,7 @@ import { inspect } from 'node:util';
 import { describe, expect, it } from '@jest/globals';
 import Ajv from 'ajv';
 
-import type { IGetAllContentTypesResponse } from '#src/pull/GetAllContentTypesResponse.schema';
+import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema';
 
 describe('GetAllContentTypesResponse.schema', () => {
 	it('should validate known-good JSON', async () => {
@@ -29,14 +29,12 @@ describe('GetAllContentTypesResponse.schema', () => {
 	});
 });
 
-function commonPath() {
-	return resolve(process.cwd(), 'src', 'generate');
-}
-
 async function loadFixture() {
 	const fixturePath = resolve(
-		commonPath(),
-		'GetAllContentTypesResponse.fixture.1.json'
+		process.cwd(),
+		'test',
+		'fixtures',
+		'GetAllContentTypesResponse.json'
 	);
 
 	const rawFixture = await readFile(fixturePath, 'utf8');
@@ -44,17 +42,43 @@ async function loadFixture() {
 }
 
 async function buildValidator() {
-	const schemaPath = resolve(
-		commonPath(),
-		'GetAllContentTypesResponse.schema.json'
-	);
+	const [baseSchema, responseSchema] = await Promise.all([
+		loadSchema(baseSchemaPath),
+		loadSchema(responseSchemaPath)
+	]);
 
-	const rawSchema = await readFile(schemaPath, 'utf8');
+	const ajv = new Ajv({
+		loadSchema: async (uri) => {
+			if (uri === 'ContentField.schema.json') {
+				return baseSchema;
+			}
+
+			throw new Error(`Unexpected schema load: ${uri}`);
+		}
+	});
+
+	return ajv.compileAsync<IGetAllContentTypesResponse>(responseSchema);
+}
+
+async function loadSchema(pathFn: () => string) {
+	const rawSchema = await readFile(pathFn(), 'utf8');
 	const parsed = JSON.parse(rawSchema) as unknown;
 	if (typeof parsed !== 'object' || parsed === null) {
 		throw new Error('Schema is not an object');
 	}
 
-	const ajv = new Ajv();
-	return ajv.compile<IGetAllContentTypesResponse>(parsed);
+	return parsed;
+}
+
+function baseSchemaPath() {
+	return resolve(process.cwd(), 'src', 'pull', 'ContentField.schema.json');
+}
+
+function responseSchemaPath() {
+	return resolve(
+		process.cwd(),
+		'src',
+		'pull',
+		'GetAllContentTypesResponse.schema.json'
+	);
 }

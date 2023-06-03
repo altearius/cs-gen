@@ -131,7 +131,7 @@ export default {
 	// restoreMocks: false,
 
 	// The root directory that Jest should scan for tests and modules within
-	rootDir: resolve(process.cwd(), '.jest', 'dist')
+	rootDir: resolve(process.cwd(), '.jest', 'tsc')
 
 	// A list of paths to directories that Jest should use to search for files in
 	// roots: [

@@ -5,7 +5,7 @@ import type { AnySchema } from 'ajv';
 import Ajv from 'ajv';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
-import type ExecutionContext from '../services/ExecutionContext.js';
+import type ExecutionContext from '../../services/ExecutionContext.js';
 
 export default async function TransformToValidation(
 	ctx: ExecutionContext,
@@ -16,8 +16,7 @@ export default async function TransformToValidation(
 		schemas: [schema]
 	});
 
-	const compiled = ajv.compile(schema);
-	const code = standaloneCode(ajv, compiled);
+	const code = standaloneCode(ajv);
 
 	const codePath = join(ctx.paths.workingDirectory, 'validate.js');
 	await writeFile(codePath, code, 'utf-8');
