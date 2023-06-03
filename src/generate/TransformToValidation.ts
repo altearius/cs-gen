@@ -1,11 +1,9 @@
-import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
 import type { AnySchema } from 'ajv';
 import Ajv from 'ajv';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
 import type ExecutionContext from '../services/ExecutionContext.js';
+import FormatAndSave from '../services/FormatAndSave.js';
 
 export default async function TransformToValidation(
 	ctx: ExecutionContext,
@@ -19,6 +17,5 @@ export default async function TransformToValidation(
 	const compiled = ajv.compile(schema);
 	const code = standaloneCode(ajv, compiled);
 
-	const codePath = join(ctx.paths.workingDirectory, 'validate.js');
-	await writeFile(codePath, code, 'utf-8');
+	await FormatAndSave(ctx, 'validate.js', 'babel', code);
 }

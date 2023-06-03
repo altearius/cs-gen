@@ -8,6 +8,9 @@ import TransformToValidation from './TransformToValidation.js';
 export default async function Generate(ctx: ExecutionContext) {
 	const contentTypes = await PullSchemaFromContentstack(ctx);
 	const jsonSchema = await TransformToJsonSchema(ctx, contentTypes);
-	await TransformToInterface(ctx, jsonSchema);
-	await TransformToValidation(ctx, jsonSchema);
+
+	await Promise.all([
+		TransformToInterface(ctx, jsonSchema),
+		TransformToValidation(ctx, jsonSchema)
+	]);
 }
