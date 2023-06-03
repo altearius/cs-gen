@@ -7,7 +7,6 @@ const JsonSchemaPathOption = new Option(
 	'Output JSON schema to a file.'
 );
 
-JsonSchemaPathOption.default(resolve('ContentTypes.schema.json'));
 JsonSchemaPathOption.env('Cs_gen_json_schema_path');
-JsonSchemaPathOption.argParser(resolve);
+JsonSchemaPathOption.argParser((path) => resolve(path));
 export default JsonSchemaPathOption;

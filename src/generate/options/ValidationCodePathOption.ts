@@ -7,7 +7,6 @@ const ValidationCodePathOption = new Option(
 	'Output validation code to a folder.'
 );
 
-ValidationCodePathOption.default(resolve('validation.js'));
 ValidationCodePathOption.env('Cs_gen_validation_code_path');
-ValidationCodePathOption.argParser(resolve);
+ValidationCodePathOption.argParser((path) => resolve(path));
 export default ValidationCodePathOption;

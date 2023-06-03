@@ -8,5 +8,5 @@ const ResponsePathOption = new Option(
 );
 
 ResponsePathOption.env('Cs_gen_response_path');
-ResponsePathOption.argParser(resolve);
+ResponsePathOption.argParser((path) => resolve(path));
 export default ResponsePathOption;

@@ -1,3 +1,4 @@
+import c from 'ansi-colors';
 import { Command } from 'commander';
 
 import type IOptions from '../models/IOptions.js';
@@ -26,7 +27,22 @@ const GenerateCommand = new Command('generate')
 	.addOption(ValidationCodePathOption);
 
 GenerateCommand.action(async (options: IOptions) => {
-	console.log(options);
+	const {
+		outputJsonSchema,
+		outputValidationCode,
+		outputTypescriptDefinitions,
+		responsePath
+	} = options;
+
+	if (
+		!outputJsonSchema &&
+		!outputValidationCode &&
+		!outputTypescriptDefinitions &&
+		!responsePath
+	) {
+		console.error(c.red('No output specified.'));
+		return;
+	}
 
 	await Generate(options);
 });

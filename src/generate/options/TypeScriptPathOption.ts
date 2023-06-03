@@ -7,7 +7,6 @@ const TypeScriptPathOption = new Option(
 	'Output TypeScript definitions to a file.'
 );
 
-TypeScriptPathOption.default(resolve('ContentTypes.d.ts'));
 TypeScriptPathOption.env('Cs_gen_typescript_path');
-TypeScriptPathOption.argParser(resolve);
+TypeScriptPathOption.argParser((path) => resolve(path));
 export default TypeScriptPathOption;
