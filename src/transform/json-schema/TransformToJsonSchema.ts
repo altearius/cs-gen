@@ -1,25 +1,18 @@
 import S from 'fluent-json-schema';
 
 import type IContentType from '../../models/IContentType.js';
-import type ExecutionContext from '../../services/ExecutionContext.js';
+import type IOptions from '../../models/IOptions.js';
 import FormatAndSave from '../../services/FormatAndSave.js';
 
 import SchemaCollection from './SchemaCollection.js';
 import SchemaWalker from './SchemaWalker.js';
 
 export default async function TransformToJsonSchema(
-	ctx: ExecutionContext,
+	options: IOptions,
 	contentTypes: ReadonlySet<IContentType>
 ) {
 	const jsonSchema = generateJsonSchema(contentTypes);
-
-	await FormatAndSave(
-		ctx,
-		'ContentTypes.schema.json',
-		'json',
-		JSON.stringify(jsonSchema)
-	);
-
+	await saveJsonSchema(options, jsonSchema);
 	return jsonSchema;
 }
 
@@ -33,4 +26,16 @@ function generateJsonSchema(contentTypes: ReadonlySet<IContentType>) {
 	);
 
 	return jsonSchema.valueOf();
+}
+
+async function saveJsonSchema(
+	{ outputJsonSchema: filepath }: IOptions,
+	jsonSchema: unknown
+) {
+	if (typeof filepath !== 'string') {
+		return;
+	}
+
+	const value = JSON.stringify(jsonSchema);
+	await FormatAndSave(filepath, 'json', value);
 }

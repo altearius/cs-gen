@@ -1,33 +1,34 @@
-import c from 'ansi-colors';
 import { Command } from 'commander';
 
-import ExecutionContext from '../services/ExecutionContext.js';
+import type IOptions from '../models/IOptions.js';
 
 import Generate from './Generate.js';
+import ApiKeyOption from './options/ApiKeyOption.js';
+import BaseUrlOption from './options/BaseUrlOption.js';
+import BranchOption from './options/BranchOption.js';
+import JsonSchemaPathOption from './options/JsonSchemaPathOption.js';
+import ManagementTokenOption from './options/ManagementTokenOption.js';
+import PrefixOption from './options/PrefixOption.js';
+import ResponsePathOption from './options/ResponsePathOption.js';
+import TypeScriptPathOption from './options/TypeScriptPathOption.js';
+import ValidationCodePathOption from './options/ValidationCodePathOption.js';
 
-const GenerateCommand = new Command('generate');
+const GenerateCommand = new Command('generate')
+	.description('Generate TypeScript definitions from Contentstack')
+	.addOption(ApiKeyOption)
+	.addOption(BaseUrlOption)
+	.addOption(BranchOption)
+	.addOption(JsonSchemaPathOption)
+	.addOption(ManagementTokenOption)
+	.addOption(PrefixOption)
+	.addOption(ResponsePathOption)
+	.addOption(TypeScriptPathOption)
+	.addOption(ValidationCodePathOption);
 
-GenerateCommand.option(
-	'-p, --prefix <prefix>',
-	'Add a prefix for TypeScript interface names.',
-	'I-'
-);
+GenerateCommand.action(async (options: IOptions) => {
+	console.log(options);
 
-interface IGenerateOptions {
-	prefix?: string;
-}
-
-GenerateCommand.action(async (options: IGenerateOptions) => {
-	const ctx = await ExecutionContext.create();
-
-	try {
-		await Generate(ctx, options.prefix ?? 'I-');
-	} finally {
-		const removed = await ExecutionContext.removeStaleRuns();
-		const noun = removed.length === 1 ? 'run' : 'runs';
-		const stale = c.yellow(removed.length.toLocaleString());
-		console.log(`Removed ${stale} stale ${noun}.`);
-	}
+	await Generate(options);
 });
 
 export default GenerateCommand;

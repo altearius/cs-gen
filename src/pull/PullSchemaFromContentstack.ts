@@ -1,23 +1,29 @@
+import { join } from 'node:path';
+
 import type IContentType from '../models/IContentType.js';
-import type ExecutionContext from '../services/ExecutionContext.js';
+import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
 
 import GetContentTypes from './GetContentTypes.js';
 import GetGlobalFields from './GetGlobalFields.js';
 
 export default async function PullSchemaFromContentstack(
-	ctx: ExecutionContext
+	options: IOptions
 ): Promise<ReadonlySet<IContentType>> {
-	const contentTypesPromise = GetContentTypes(ctx);
-	const globalsPromise = GetGlobalFields(ctx);
+	const contentTypesPromise = GetContentTypes(options);
+	const globalsPromise = GetGlobalFields(options);
 
 	const saveContentTypes = saveResponse(
-		ctx,
+		options,
 		contentTypesPromise,
 		'content-types.json'
 	);
 
-	const saveGlobals = saveResponse(ctx, globalsPromise, 'global-fields.json');
+	const saveGlobals = saveResponse(
+		options,
+		globalsPromise,
+		'global-fields.json'
+	);
 
 	const [types, globals] = await Promise.all([
 		contentTypesPromise,
@@ -38,10 +44,15 @@ export default async function PullSchemaFromContentstack(
 }
 
 async function saveResponse(
-	ctx: ExecutionContext,
+	{ responsePath }: IOptions,
 	responsePromise: Promise<unknown>,
 	name: string
 ) {
+	if (typeof responsePath !== 'string') {
+		return;
+	}
+
+	const filepath = join(responsePath, name);
 	const value = JSON.stringify(await responsePromise);
-	await FormatAndSave(ctx, name, 'json', value);
+	await FormatAndSave(filepath, 'json', value);
 }

@@ -1,7 +1,7 @@
 import type { ValidateFunction } from 'ajv';
 
 import type IContentType from '../models/IContentType.js';
-import type ExecutionContext from '../services/ExecutionContext.js';
+import type IOptions from '../models/IOptions.js';
 
 import ContentstackQuery from './ContentstackQuery.js';
 import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';
@@ -10,10 +10,10 @@ export default class ContentTypesQuery extends ContentstackQuery<IGetAllContentT
 	protected readonly _relativePath = '/v3/content_types';
 
 	public constructor(
-		_ctx: ExecutionContext,
+		_options: IOptions,
 		_validator: ValidateFunction<IGetAllContentTypesResponse>
 	) {
-		super(_ctx, _validator);
+		super(_options, _validator);
 	}
 
 	protected override mutateQueryString(qs: URLSearchParams) {

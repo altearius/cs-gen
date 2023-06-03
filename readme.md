@@ -19,6 +19,10 @@ through the Contentstack REST endpoint. The validation code will ensure that
 the entities you receive match the interfaces that your code was compiled
 against.
 
+## TODO
+
+- Per-interface validation code.
+
 [1]: https://json-schema.org/ 'JSON Schema'
 [2]: https://github.com/bcherny/json-schema-to-typescript 'JSON Schema to TypeScript'
 [3]: https://ajv.js.org/standalone.html 'Standalone validation code'

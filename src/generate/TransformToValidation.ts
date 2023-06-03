@@ -2,11 +2,11 @@ import type { AnySchema } from 'ajv';
 import Ajv from 'ajv';
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
-import type ExecutionContext from '../services/ExecutionContext.js';
+import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
 
 export default async function TransformToValidation(
-	ctx: ExecutionContext,
+	options: IOptions,
 	schema: AnySchema
 ) {
 	const ajv = new Ajv({
@@ -17,5 +17,10 @@ export default async function TransformToValidation(
 	const compiled = ajv.compile(schema);
 	const code = standaloneCode(ajv, compiled);
 
-	await FormatAndSave(ctx, 'validate.js', 'babel', code);
+	const { outputValidationCode: filepath } = options;
+	if (typeof filepath !== 'string') {
+		return;
+	}
+
+	await FormatAndSave(filepath, 'babel', code);
 }

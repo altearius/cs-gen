@@ -3,18 +3,23 @@ import { inspect } from 'node:util';
 import type { ValidateFunction } from 'ajv';
 
 import type IContentType from '../models/IContentType.js';
-import type ExecutionContext from '../services/ExecutionContext.js';
+import type IOptions from '../models/IOptions.js';
 
 interface IResponse {
 	readonly [k: string]: unknown;
 	readonly count?: number;
 }
 
+type IRequiredOptions = Pick<
+	IOptions,
+	'apiKey' | 'baseUrl' | 'branch' | 'managementToken'
+>;
+
 export default abstract class ContentstackQuery<TResponse extends IResponse> {
 	protected abstract readonly _relativePath: string;
 
 	protected constructor(
-		private readonly _ctx: ExecutionContext,
+		private readonly _options: IRequiredOptions,
 		private readonly _validator: ValidateFunction<TResponse>
 	) {}
 
@@ -56,9 +61,9 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 			headers: {
 				// Justification: This is the header name Contentstack expects.
 				// eslint-disable-next-line @typescript-eslint/naming-convention
-				api_key: this._ctx.apiKey,
-				authorization: this._ctx.managementToken,
-				branch: this._ctx.branch
+				api_key: this._options.apiKey,
+				authorization: this._options.managementToken,
+				branch: this._options.branch
 			},
 			method: 'GET'
 		});
@@ -96,7 +101,7 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 		}
 
 		const relative = `${this._relativePath}?${qs.toString()}`;
-		return new URL(relative, this._ctx.baseUrl);
+		return new URL(relative, this._options.baseUrl);
 	}
 
 	protected abstract mutateQueryString(qs: URLSearchParams): void;
