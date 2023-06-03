@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { Option } from 'commander';
 
 const JsonSchemaPathOption = new Option(
-	'--output-json-schema <path>',
+	'--json-schema-path <path>',
 	'Output JSON schema to a file.'
 );
 

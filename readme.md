@@ -19,6 +19,51 @@ through the Contentstack REST endpoint. The validation code will ensure that
 the entities you receive match the interfaces that your code was compiled
 against.
 
+## Installation
+
+`cs-gen` is designed to be installed as a dev dependency in your project:
+
+```bash
+npm install --save-dev cs-gen
+```
+
+or
+
+```bash
+yarn add --dev cs-gen
+```
+
+## Usage
+
+`cs-gen` can generate JSON Schema documents, TypeScript definitions, and
+standalone validation code.
+
+A CLI is provided:
+
+```bash
+cs-gen generate [...options]
+```
+
+By default, it will output _nothing_; you must tell it what sort of output
+you want.
+
+### Options
+
+All options may also be provided as environment variables. `cs-gen` honors
+any `.env` file it finds in the working directory.
+
+| Option             | Environment Variable    | Description                                   |
+| ------------------ | ----------------------- | --------------------------------------------- |
+| --api-key          | Cs_gen_api_key          | Contentstack API key                          |
+| --base-url         | Cs_gen_base_url         | Contentstack API base URL                     |
+| --branch           | Cs_gen_branch           | Contentstack branch                           |
+| --json-schema-path | Cs_gen_json_schema_path | Output a JSON schema                          |
+| --management-token | Cs_gen_management_token | API management token                          |
+| --prefix           | Cs_gen_prefix           | Value prepended to TypeScript interface names |
+| --response-path    | Cs_gen_response_path    | Output raw API responses                      |
+| --typescript-path  | Cs_gen_typescript_path  | Output TypeScript interfaces                  |
+| --validation-path  | Cs_gen_validation_path  | Output validation code                        |
+
 ## TODO
 
 - Per-interface validation code.

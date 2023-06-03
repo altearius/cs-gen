@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { Option } from 'commander';
 
 const TypeScriptPathOption = new Option(
-	'--output-typescript-definitions <path>',
+	'--typescript-path <path>',
 	'Output TypeScript definitions to a file.'
 );
 
