@@ -28,4 +28,3 @@ yarn \
 		--bannerComment 'import type { IContentField } from "./ContentField.schema"'
 
 yarn prettier --write src/pull/*.schema.d.ts
-

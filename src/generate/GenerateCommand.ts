@@ -27,19 +27,10 @@ const GenerateCommand = new Command('generate')
 	.addOption(ValidationCodePathOption);
 
 GenerateCommand.action(async (options: IOptions) => {
-	const {
-		outputJsonSchema,
-		outputValidationCode,
-		outputTypescriptDefinitions,
-		responsePath
-	} = options;
+	const { jsonSchemaPath, validationPath, typescriptPath, responsePath } =
+		options;
 
-	if (
-		!outputJsonSchema &&
-		!outputValidationCode &&
-		!outputTypescriptDefinitions &&
-		!responsePath
-	) {
+	if (!jsonSchemaPath && !validationPath && !typescriptPath && !responsePath) {
 		console.error(c.red('No output specified.'));
 		return;
 	}

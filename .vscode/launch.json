@@ -5,7 +5,7 @@
 			"name": "Launch Program",
 			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
 			"preLaunchTask": "build",
-			"program": "${workspaceFolder}/dist/index.js",
+			"program": "${workspaceFolder}/dist/cs-gen.js",
 			"request": "launch",
 			"runtimeArgs": ["--enable-source-maps"],
 			"skipFiles": ["<node_internals>/**"],

@@ -1,3 +1,4 @@
+import type { SchemaObject } from 'ajv';
 import S from 'fluent-json-schema';
 
 import type IContentType from '../../models/IContentType.js';
@@ -10,7 +11,7 @@ import SchemaWalker from './SchemaWalker.js';
 export default async function TransformToJsonSchema(
 	options: IOptions,
 	contentTypes: ReadonlySet<IContentType>
-) {
+): Promise<SchemaObject> {
 	const jsonSchema = generateJsonSchema(contentTypes);
 	await saveJsonSchema(options, jsonSchema);
 	return jsonSchema;
@@ -29,13 +30,13 @@ function generateJsonSchema(contentTypes: ReadonlySet<IContentType>) {
 }
 
 async function saveJsonSchema(
-	{ outputJsonSchema: filepath }: IOptions,
-	jsonSchema: unknown
+	{ jsonSchemaPath }: IOptions,
+	jsonSchema: SchemaObject
 ) {
-	if (typeof filepath !== 'string') {
+	if (typeof jsonSchemaPath !== 'string') {
 		return;
 	}
 
 	const value = JSON.stringify(jsonSchema);
-	await FormatAndSave(filepath, 'json', value);
+	await FormatAndSave(jsonSchemaPath, 'json', value);
 }
