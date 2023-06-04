@@ -147,6 +147,49 @@ Or maybe, is it always going to be an object? Is that a safe bet?
 I could imagine it being a string in some cases, if there's some way to
 have the server render HTML that I just don't know about yet.
 
+## TODO
+
+It should be possible to improve performance by keeping a "last built state"
+for each content type and only re-generating the ones that have changed since
+the last run.
+
+---
+
+It should be possible to generate some TypeScript wrappers around each bit
+of standalone validation code. Looks like this:
+
+```ts
+import type { ValidateFunction } from 'ajv';
+import type { IHomepage } from '../models.d.ts';
+import validation from './homepage.js';
+export default validation as ValidateFunction<IHomepage>;
+```
+
+---
+
+In my project, I have a structure like this:
+
+```ts
+const enum ContentType {
+  Settings = 'settings',
+  Homepage = 'homepage'
+}
+```
+
+This gives me intellisense support for the different content types that I have
+in my stack. Right now, I have to maintain this manually. I could be generating
+this instead.
+
+---
+
+It would be nice to be able to white-list or black-list specific content types
+for the generation process. Might not need every possible content type.
+
+---
+
+Right now, all TypeScript types get dumped into one large file, which I guess
+is fine, but it would be neater if we could separate them out.
+
 [1]: https://json-schema.org/ 'JSON Schema'
 [2]: https://github.com/bcherny/json-schema-to-typescript 'JSON Schema to TypeScript'
 [3]: https://ajv.js.org/standalone.html 'Standalone validation code'
