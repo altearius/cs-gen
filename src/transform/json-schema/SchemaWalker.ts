@@ -32,7 +32,11 @@ export default class SchemaWalker {
 
 	public constructor(schema: SchemaCollection) {
 		for (const contentType of schema) {
-			this.processContentType(contentType);
+			if (schema.globalTypes.has(contentType.uid)) {
+				this.processGlobalType(contentType);
+			} else {
+				this.processContentType(contentType);
+			}
 		}
 	}
 
@@ -40,20 +44,27 @@ export default class SchemaWalker {
 		return this._definitions[Symbol.iterator]();
 	}
 
+	private processGlobalType(contentType: IContentType) {
+		const schema = this.processContentTypeInterior(contentType);
+		this._definitions.set(contentType.uid, schema);
+	}
+
 	private processContentType(contentType: IContentType) {
 		const entryDef = this.getOrCreateEntryDefinition();
+		const schema = this.processContentTypeInterior(contentType);
+		const base = S.allOf([S.ref(`#/definitions/${entryDef}`), schema]);
+		this._definitions.set(contentType.uid, base);
+	}
 
+	private processContentTypeInterior(contentType: IContentType) {
 		const required = contentType.schema
 			.filter((s) => s.mandatory)
 			.map((s) => s.uid);
 
-		const schema = contentType.schema.reduce(
+		return contentType.schema.reduce(
 			(s, field) => s.prop(field.uid, this.processField(field)),
 			S.object().required(required)
 		);
-
-		const base = S.allOf([S.ref(`#/definitions/${entryDef}`), schema]);
-		this._definitions.set(contentType.uid, base);
 	}
 
 	private processField(field: IContentField): ISchema {

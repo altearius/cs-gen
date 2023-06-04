@@ -9,7 +9,10 @@ import GetGlobalFields from './GetGlobalFields.js';
 
 export default async function PullSchemaFromContentstack(
 	options: IOptions
-): Promise<ReadonlySet<IContentType>> {
+): Promise<{
+	readonly contentTypes: ReadonlyMap<string, IContentType>;
+	readonly globalTypes: ReadonlyMap<string, IContentType>;
+}> {
 	const contentTypesPromise = GetContentTypes(options);
 	const globalsPromise = GetGlobalFields(options);
 
@@ -30,17 +33,11 @@ export default async function PullSchemaFromContentstack(
 		globalsPromise
 	]);
 
-	const map = [...types, ...globals].reduce((map, type) => {
-		if (map.has(type.uid)) {
-			throw new Error(`Duplicate content type UID: ${type.uid}`);
-		}
-
-		map.set(type.uid, type);
-		return map;
-	}, new Map<string, IContentType>());
-
+	const contentTypes = indexByUid(types);
+	const globalTypes = indexByUid(globals);
 	await Promise.all([saveContentTypes, saveGlobals]);
-	return new Set(map.values());
+
+	return { contentTypes, globalTypes };
 }
 
 async function saveResponse(
@@ -55,4 +52,17 @@ async function saveResponse(
 	const filepath = join(responsePath, name);
 	const value = JSON.stringify(await responsePromise);
 	await FormatAndSave(filepath, 'json', value);
+}
+
+function indexByUid<T extends { readonly uid: string }>(
+	list: readonly T[]
+): ReadonlyMap<string, T> {
+	return list.reduce((map, item) => {
+		if (map.has(item.uid)) {
+			throw new Error(`Duplicate content type UID: ${item.uid}`);
+		}
+
+		map.set(item.uid, item);
+		return map;
+	}, new Map<string, T>());
 }

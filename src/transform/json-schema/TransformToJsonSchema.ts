@@ -8,17 +8,23 @@ import FormatAndSave from '../../services/FormatAndSave.js';
 import SchemaCollection from './SchemaCollection.js';
 import SchemaWalker from './SchemaWalker.js';
 
+type ITypeCollection = ReadonlyMap<string, IContentType>;
+
 export default async function TransformToJsonSchema(
 	options: IOptions,
-	contentTypes: ReadonlySet<IContentType>
+	contentTypes: ITypeCollection,
+	globalTypes: ITypeCollection
 ): Promise<SchemaObject> {
-	const jsonSchema = generateJsonSchema(contentTypes);
+	const jsonSchema = generateJsonSchema(contentTypes, globalTypes);
 	await saveJsonSchema(options, jsonSchema);
 	return jsonSchema;
 }
 
-function generateJsonSchema(contentTypes: ReadonlySet<IContentType>) {
-	const collection = new SchemaCollection(contentTypes);
+function generateJsonSchema(
+	contentTypes: ITypeCollection,
+	globalTypes: ITypeCollection
+) {
+	const collection = new SchemaCollection(contentTypes, globalTypes);
 	const walker = new SchemaWalker(collection);
 
 	const jsonSchema = [...walker].reduce(

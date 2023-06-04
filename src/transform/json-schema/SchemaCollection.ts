@@ -2,12 +2,18 @@ import type IContentType from '../../models/IContentType.js';
 
 import ReferenceFinder from './ReferenceFinder.js';
 
+type ITypeCollection = ReadonlyMap<string, IContentType>;
+
 export default class SchemaCollection {
 	private readonly _sorted: readonly IContentType[];
 
-	public constructor(contentTypes: ReadonlySet<IContentType>) {
-		const mapped = mapByUid(contentTypes);
-		this._sorted = sortTopologically(contentTypes, mapped);
+	public constructor(
+		public readonly contentTypes: ITypeCollection,
+		public readonly globalTypes: ITypeCollection
+	) {
+		const mapped = mapByUid(globalTypes, contentTypes);
+		const set = new Set(mapped.values());
+		this._sorted = sortTopologically(set, mapped);
 	}
 
 	// Guaranteed to always be in topological order, and that all references
@@ -17,11 +23,16 @@ export default class SchemaCollection {
 	}
 }
 
-function mapByUid<T extends IContentType>(contentTypes: ReadonlySet<T>) {
-	return [...contentTypes].reduce((map, contentType) => {
-		map.set(contentType.uid, contentType);
-		return map;
-	}, new Map<string, T>());
+function mapByUid(...contentTypes: ITypeCollection[]) {
+	const map = new Map<string, IContentType>();
+
+	for (const contentTypeMap of contentTypes) {
+		for (const [uid, type] of contentTypeMap) {
+			map.set(uid, type);
+		}
+	}
+
+	return map;
 }
 
 function sortTopologically(

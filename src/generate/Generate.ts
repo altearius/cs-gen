@@ -6,8 +6,15 @@ import TransformToInterface from './TransformToInterface.js';
 import TransformToValidation from './TransformToValidation.js';
 
 export default async function Generate(options: IOptions) {
-	const contentTypes = await PullSchemaFromContentstack(options);
-	const jsonSchema = await TransformToJsonSchema(options, contentTypes);
+	const { contentTypes, globalTypes } = await PullSchemaFromContentstack(
+		options
+	);
+
+	const jsonSchema = await TransformToJsonSchema(
+		options,
+		contentTypes,
+		globalTypes
+	);
 
 	await Promise.all([
 		TransformToInterface(options, jsonSchema),

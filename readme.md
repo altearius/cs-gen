@@ -190,6 +190,16 @@ for the generation process. Might not need every possible content type.
 Right now, all TypeScript types get dumped into one large file, which I guess
 is fine, but it would be neater if we could separate them out.
 
+---
+
+Maintain a stable sort-order on as many generated files as possible. It will
+help with source-control churn.
+
+---
+
+Provide ability to specify depth for array tuples before it gives up and
+just makes a plain array.
+
 [1]: https://json-schema.org/ 'JSON Schema'
 [2]: https://github.com/bcherny/json-schema-to-typescript 'JSON Schema to TypeScript'
 [3]: https://ajv.js.org/standalone.html 'Standalone validation code'
