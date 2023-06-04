@@ -96,6 +96,57 @@ Output both a JSON Schema and JavaScript validation code:
 yarn cs-gen generate --json-schema-path ./Contentstack.schema.json --validation-path ./src/validation
 ```
 
+## Limitations
+
+I am not sure how to handle the `json` data type provided by the Contentstack
+JSON-RTE editor.
+
+TSgen currently types this field as `any`.
+
+I can't find documentation for it.
+
+If I examine the current output for an entity with this field, it is an object.
+
+One of the properties of that object is named `_version` that presently has a
+value of `9`. So I guess there are other versions?
+
+I could try to reverse-engineer this. It would look something like:
+
+```ts
+const name = this.getOrCreateJsonDefinition();
+const ref = S.ref(`#/definitions/${name}`);
+const multiple = handleMultiple(field, ref);
+return applyBaseFieldsFrom(field).to(multiple);
+```
+
+Where `getOrCreateJsonDefinition` would create a definition like this:
+
+```ts
+S.object()
+  .required(['attrs', 'children', 'uid'])
+  .prop('uid', S.string())
+  .prop('attrs', S.object()) // <-- unclear what goes here
+  .prop(
+    'children',
+    S.array().items(
+      S.oneOf([
+        S.ref(`#/definitions/${name}`), // <-- self-referential
+        S.object().required(['text']).prop('text', S.string())
+      ])
+    )
+  );
+```
+
+But the `_version` number and lack of documentation scares me. Maybe if I
+could find the docs for this and a roadmap for future version iterations,
+it would make more sense. As it is, it seems complex and in flux, and
+I'm worried that this target is moving too quickly to hit. Perhaps it is
+better to leave this as "any" until I can find more information.
+
+Or maybe, is it always going to be an object? Is that a safe bet?
+I could imagine it being a string in some cases, if there's some way to
+have the server render HTML that I just don't know about yet.
+
 [1]: https://json-schema.org/ 'JSON Schema'
 [2]: https://github.com/bcherny/json-schema-to-typescript 'JSON Schema to TypeScript'
 [3]: https://ajv.js.org/standalone.html 'Standalone validation code'

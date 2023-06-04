@@ -89,40 +89,6 @@ export default class SchemaWalker {
 		}
 	}
 
-	// TSgen types this as "any"
-	// I can't find documentation for it.
-	// The output for an entity right now has a field that says _version: 9
-	// So I guess there are other versions?
-	// I could try to reverse-engineer this. It would look something like:
-	//
-	//   const name = this.getOrCreateJsonDefinition();
-	//   const ref = S.ref(`#/definitions/${name}`);
-	//   const multiple = handleMultiple(field, ref);
-	//   return applyBaseFieldsFrom(field).to(multiple);
-	//
-	// Where `getOrCreateJsonDefinition` would create a definition like this:
-	//
-	//   S
-	//     .object()
-	//     .required(['attrs', 'children', 'uid'])
-	//     .prop('uid', S.string())
-	//     .prop('attrs', S.object()) <-- unclear what goes here
-	//     .prop(
-	//       'children',
-	//       S.array().items(S.oneOf([
-	//         S.ref(`#/definitions/${name}`),
-	//         S.object().required(['text']).prop('text', S.string())
-	//       ])));
-	//
-	// But the _version number and lack of documentation scares me. Maybe if I
-	// could find the docs for this and a roadmap for future version iterations,
-	// it would make more sense. As it is, it seems complex and in flux, and
-	// I'm worried that this target is moving too quickly to hit. Perhaps it is
-	// better to leave this as "any" until I can find more information.
-	//
-	// Or maybe, is it always going to be an object? Is that a safe bet?
-	// I could imagine it being a string in some cases, if there's some way to
-	// have the server render HTML that I just don't know about yet.
 	private processJsonField(field: IJsonContentField) {
 		return applyBaseFieldsFrom(field).to(handleMultiple(field, S.raw({})));
 	}
