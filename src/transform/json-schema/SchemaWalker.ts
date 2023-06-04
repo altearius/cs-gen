@@ -167,7 +167,7 @@ export default class SchemaWalker {
 	private processModularBlocksField(field: IBlocksContentField): ISchema {
 		const possibleBlocks = field.blocks.map((block) => {
 			const blockSchema = this.processModularBlocksBlock(block);
-			return S.object().prop(block.uid, blockSchema);
+			return S.object().prop(block.uid, blockSchema).required([block.uid]);
 		});
 
 		const blocksContainer = S.object().oneOf(possibleBlocks);

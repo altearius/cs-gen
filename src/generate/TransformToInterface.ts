@@ -78,6 +78,11 @@ function updateReferencesInObject(schema: object, prefix: string) {
 			continue;
 		}
 
+		if (key === 'title' && typeof value === 'string') {
+			result[key] = `${prefix}${value}`;
+			continue;
+		}
+
 		if (Array.isArray(value)) {
 			result[key] = updateReferencesInArray(value, prefix);
 			continue;

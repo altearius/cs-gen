@@ -21,12 +21,19 @@ export default async function TransformToValidation(
 
 	const ajv = new Ajv({
 		code: { esm: true, source: true },
-		schemas: [...schemas.values()]
+		schemas: [...schemas.values()],
+		verbose: true
 	});
 
 	addFormats(ajv);
 
 	for (const [name, schema] of schemas) {
+		// No point in validating certain types. These are all supplied by
+		// Contentstack itself, and the user has no control to modify them.
+		if (name.includes('-')) {
+			continue;
+		}
+
 		console.log('Generating validation code:', name);
 		const compiled = ajv.compile(schema);
 		const code = standaloneCode(ajv, compiled);
@@ -43,11 +50,6 @@ function extractDefinitions(schema: SchemaObject) {
 	}
 
 	return Object.entries(definitions).reduce((map, [name, schema]) => {
-		// No point in validating meta types.
-		if (name.includes('-')) {
-			return map;
-		}
-
 		map.set(name, {
 			$id: `#/definitions/${name}`,
 			...(schema as SchemaObject)
