@@ -19,6 +19,7 @@ import type {
 } from '../../pull/ContentField.schema.js';
 
 import BlockMetadataDefinition from './BlockMetadataDefinition.js';
+import EntryDefinition from './EntryDefinition.js';
 import HostedFileDefinition from './HostedFileDefinition.js';
 import type ISchema from './ISchema.js';
 import LinkDefinition from './LinkFieldDefinition.js';
@@ -40,13 +41,19 @@ export default class SchemaWalker {
 	}
 
 	private processContentType(contentType: IContentType) {
-		let schema = S.object();
+		const entryDef = this.getOrCreateEntryDefinition();
 
-		for (const field of contentType.schema) {
-			schema = schema.prop(field.uid, this.processField(field));
-		}
+		const required = contentType.schema
+			.filter((s) => s.mandatory)
+			.map((s) => s.uid);
 
-		this._definitions.set(contentType.uid, schema);
+		const schema = contentType.schema.reduce(
+			(s, field) => s.prop(field.uid, this.processField(field)),
+			S.object().required(required)
+		);
+
+		const base = S.allOf([S.ref(`#/definitions/${entryDef}`), schema]);
+		this._definitions.set(contentType.uid, base);
 	}
 
 	private processField(field: IContentField): ISchema {
@@ -124,11 +131,22 @@ export default class SchemaWalker {
 	}
 
 	private processReferenceField(field: IReferenceContentField) {
+		const referenced = field.reference_to ?? [];
+
+		if (referenced.length === 0) {
+			return applyBaseFieldsFrom(field).to(S.array().maxItems(0));
+		}
+
+		// References are always arrays, even if they are not flagged as "multiple"
+		// and I don't know why.
 		const ref = S.array().items(
-			S.object()
-				.prop('uid', S.string())
-				.prop('_content_type_uid', S.string().enum(field.reference_to ?? []))
-				.required(['uid', '_content_type_uid'])
+			S.anyOf([
+				S.object()
+					.prop('uid', S.string())
+					.prop('_content_type_uid', S.string().enum(referenced))
+					.required(['uid', '_content_type_uid']),
+				...referenced.map((refName) => S.ref(`#/definitions/${refName}`))
+			])
 		);
 
 		return applyBaseFieldsFrom(field).to(ref);
@@ -223,6 +241,12 @@ export default class SchemaWalker {
 
 		groupSchema = handleMultiple(group, groupSchema);
 		return applyBaseFieldsFrom(group).to(groupSchema);
+	}
+
+	private getOrCreateEntryDefinition() {
+		const name = 'contentstack-entry';
+		this.getOrCreateDefinition(name, EntryDefinition);
+		return name;
 	}
 
 	private getOrCreateLinkDefinition() {
