@@ -93,7 +93,9 @@ yarn cs-gen generate --typescript-path ./models/Contentstack.d.ts
 Output both a JSON Schema and JavaScript validation code:
 
 ```bash
-yarn cs-gen generate --json-schema-path ./Contentstack.schema.json --validation-path ./src/validation
+yarn cs-gen generate \
+  --json-schema-path ./Contentstack.schema.json \
+  --validation-path ./src/validation
 ```
 
 ## Limitations

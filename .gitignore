@@ -8,3 +8,4 @@
 /src/pull/*.schema.d.ts
 tsconfig.src.tsbuildinfo
 tsconfig.tsbuildinfo
+yarn-error.log
