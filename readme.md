@@ -26,13 +26,13 @@ against.
 `cs-gen` is designed to be installed as a dev dependency in your project:
 
 ```bash
-npm install --save-dev cs-gen
+npm install --save-dev @altearius/cs-gen
 ```
 
 or
 
 ```bash
-yarn add --dev cs-gen
+yarn add --dev @altearius/cs-gen
 ```
 
 _Optional_: If you will be using the generated validation code, your project
