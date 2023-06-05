@@ -256,6 +256,24 @@ export interface IMenuItem {
 
 </td></tr></tbody></table>
 
+## Development Guide
+
+This project uses `yarn` as a package manager.
+
+The following development scripts are provided:
+
+- _build_: Compile the TypeScript for distribution.
+- _clean_: Remove all generated files.
+- _cs-gen_: Execute the local version of `cs-gen`.
+- _lint_: Execute `eslint` for static code analysis.
+- _pretty_: Execute `prettier` for stylistic concerns.
+- _test_: Execute `jest` for unit tests.
+
+I'm on linux and haven't tested any of development scripts in Windows or
+anything other than Ubuntu. I know some of the build scripts require bash
+and I don't expect that to work on a typical Windows machine. They could
+be re-written in Node, I expect. Someday.
+
 ## TODO
 
 It should be possible to improve performance by keeping a "last built state"

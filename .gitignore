@@ -1,11 +1,7 @@
-/.data
 /.env
 /.jest
 /dist
 /node_modules
-/qwerty
-/qwerty2
 /src/pull/*.schema.d.ts
-tsconfig.src.tsbuildinfo
-tsconfig.tsbuildinfo
+/**/tsconfig.tsbuildinfo
 yarn-error.log

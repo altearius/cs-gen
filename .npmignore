@@ -1,6 +1,6 @@
-/.data
 /.vscode
 /build
 /.env
 /.jest
 /src/pull/*.schema.d.ts
+yarn-error.log

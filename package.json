@@ -12,6 +12,7 @@
     "prettier": "^2.8.8",
     "tslib": "^2.5.2"
   },
+  "description": "Generate code based on a Contentstack stack",
   "devDependencies": {
     "@types/json-schema": "7.X.X",
     "@types/node": "18.X.X",
@@ -29,8 +30,12 @@
   },
   "license": "MIT",
   "main": "dist/cs-gen.js",
-  "name": "cs-gen",
+  "name": "@altearius/cs-gen",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/altearius/cs-gen"
+  },
   "scripts": {
     "build": "tsc -b ./src/tsconfig.json",
     "clean": "rm -rf ./.jest ./dist ./src/pull/*.schema.d.ts",
