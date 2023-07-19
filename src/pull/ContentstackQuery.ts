@@ -28,11 +28,7 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 		let cursor = 0;
 
 		const firstBatch = await this.getBatch(0, limit);
-		const { count } = firstBatch;
-
-		if (count === undefined) {
-			throw new Error('Expected count to be defined');
-		}
+		const count = this.resolveCount(firstBatch);
 
 		for (const item of this.accessResponseContent(firstBatch)) {
 			cursor += 1;
@@ -52,6 +48,14 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 				break;
 			}
 		}
+	}
+
+	protected resolveCount({ count }: TResponse): number {
+		if (count === undefined) {
+			throw new Error('Expected count to be defined');
+		}
+
+		return count;
 	}
 
 	private async getBatch(skip: number, limit: number) {
@@ -104,6 +108,6 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 		return new URL(relative, this._options.baseUrl);
 	}
 
-	protected abstract mutateQueryString(qs: URLSearchParams): void;
 	protected abstract accessResponseContent(response: TResponse): IContentType[];
+	protected abstract mutateQueryString(qs: URLSearchParams): void;
 }

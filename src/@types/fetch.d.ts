@@ -1,5 +1,9 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/naming-convention */
 // Justification: Defines pre-existing global types that we do not control.
+// Also, 'var' is used because 'let' and 'const' don't work. Somebody else
+// please find out why and educate me.
 
 // From https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60924
 
@@ -21,18 +25,17 @@ declare global {
 		FormData,
 		Headers,
 		Request,
-		Response,
-		fetch
+		Response
 	}: {
 		FormData: typeof FormDataType;
 		Headers: typeof HeadersType;
 		Request: typeof RequestType;
 		Response: typeof ResponseType;
-		fetch: typeof fetchType;
 	};
 
 	type FormData = FormDataType;
 	type Headers = HeadersType;
 	type Request = RequestType;
 	type Response = ResponseType;
+	var fetch: typeof fetchType;
 }

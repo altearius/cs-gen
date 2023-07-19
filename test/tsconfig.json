@@ -7,7 +7,7 @@
 			"#src/*": ["../src/*"]
 		}
 	},
-	"include": ["../src/**/*.test.ts", "./**/*.ts"],
+	"include": ["../src/@types/**/*.d.ts", "../src/**/*.test.ts", "./**/*.ts"],
 	"references": [
 		{
 			"path": "../src/tsconfig.json"

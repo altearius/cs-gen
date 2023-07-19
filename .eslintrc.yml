@@ -39,4 +39,9 @@ overrides:
     plugins: [jest]
     extends: ['plugin:jest/recommended']
     rules:
+      # Tests can afford to treat unexpected nulls as errors.
       '@typescript-eslint/no-non-null-assertion': off
+
+      # I like to use the `name` property of functions and classes to describe
+      # what is being tested.
+      'jest/valid-title': off
