@@ -28,6 +28,9 @@
     "typescript": "^5.0.4",
     "undici": "^5.22.1"
   },
+  "imports": {
+    "#src/*.js": "./dist/*.js"
+  },
   "license": "MIT",
   "main": "dist/cs-gen.js",
   "name": "@altearius/cs-gen",
@@ -48,8 +51,5 @@
     "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/tsc/test/jest.config.js"
   },
   "type": "module",
-  "version": "0.1.0",
-  "imports": {
-    "#src/*.js": "./dist/*.js"
-  }
+  "version": "0.1.0"
 }
