@@ -1,10 +1,3 @@
-/* eslint-disable vars-on-top */
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/naming-convention */
-// Justification: Defines pre-existing global types that we do not control.
-// Also, 'var' is used because 'let' and 'const' don't work. Somebody else
-// please find out why and educate me.
-
 // From https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60924
 
 import type {

@@ -49,7 +49,7 @@ async function loadFixture() {
 	return JSON.parse(rawFixture) as unknown;
 }
 
-function mockResponse(json: unknown): Awaited<ReturnType<typeof fetch>> {
+function mockResponse(json: unknown): Response {
 	return {
 		arrayBuffer: async () => new ArrayBuffer(0),
 		blob: async () => new Blob([]),
