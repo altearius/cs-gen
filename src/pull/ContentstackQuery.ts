@@ -63,8 +63,6 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 
 		const response = await fetch(url.toString(), {
 			headers: {
-				// Justification: This is the header name Contentstack expects.
-				// eslint-disable-next-line @typescript-eslint/naming-convention
 				api_key: this._options.apiKey,
 				authorization: this._options.managementToken,
 				branch: this._options.branch

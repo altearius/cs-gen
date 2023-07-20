@@ -12,7 +12,7 @@ export default async function FormatAndSave(
 ) {
 	const config = await prettier.resolveConfig(filepath, { editorconfig: true });
 
-	const pretty = prettier.format(value, {
+	const pretty = await prettier.format(value, {
 		...config,
 		filepath,
 		parser
