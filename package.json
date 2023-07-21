@@ -49,6 +49,7 @@
     "lint": "eslint .",
     "postbuild": "cp src/pull/*.schema.json dist/pull && chmod +x ./dist/cs-gen.js",
     "prebuild": "./build/generate-types.sh",
+    "prepublish": "yarn clean && yarn build && yarn lint && yarn pretty && yarn test",
     "pretest": "tsc -b ./test/tsconfig.json",
     "pretty": "prettier . --check",
     "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/tsc/test/jest.config.js"
