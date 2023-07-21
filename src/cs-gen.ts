@@ -2,10 +2,12 @@
 
 import { Command } from 'commander';
 import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 
 import GenerateCommand from './generate/GenerateCommand.js';
 
-dotenv.config();
+const resolvedEnv = dotenv.config();
+dotenvExpand.expand(resolvedEnv);
 
 const program = new Command('cs-gen');
 program.description('Generate type definitions for Contentstack content types');
