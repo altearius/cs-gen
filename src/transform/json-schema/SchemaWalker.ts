@@ -18,11 +18,11 @@ import type {
 	ITextContentField
 } from '../../pull/ContentField.schema.js';
 
-import BlockMetadataDefinition from './BlockMetadataDefinition.js';
 import EntryDefinition from './EntryDefinition.js';
 import HostedFileDefinition from './HostedFileDefinition.js';
 import type ISchema from './ISchema.js';
 import LinkDefinition from './LinkFieldDefinition.js';
+import MetadataDefinition from './MetadataDefinition.js';
 import type SchemaCollection from './SchemaCollection.js';
 
 type IBlock = IBlocksContentField['blocks'][number];
@@ -209,7 +209,7 @@ export default class SchemaWalker {
 	}
 
 	private processModularBlocksBlock(block: IBlock) {
-		const metadataName = this.getOrCreateBlockMetadataDefinition();
+		const metadataName = this.getOrCreateMetadataDefinition();
 
 		if (block.reference_to) {
 			return S.object()
@@ -243,11 +243,20 @@ export default class SchemaWalker {
 	}
 
 	private processGroupField(group: IGroupContentField): ISchema {
+		const metadataName = this.getOrCreateMetadataDefinition();
+
 		let groupSchema: ISchema = S.object();
 
 		for (const field of group.schema) {
 			const fieldSchema = this.processField(field);
 			groupSchema = groupSchema.prop(field.uid, fieldSchema);
+		}
+
+		if (group.multiple) {
+			groupSchema = S.object().allOf([
+				S.ref(`#/definitions/${metadataName}`),
+				groupSchema
+			]);
 		}
 
 		groupSchema = handleMultiple(group, groupSchema);
@@ -266,9 +275,9 @@ export default class SchemaWalker {
 		return name;
 	}
 
-	private getOrCreateBlockMetadataDefinition() {
-		const name = 'block-metadata';
-		this.getOrCreateDefinition(name, BlockMetadataDefinition);
+	private getOrCreateMetadataDefinition() {
+		const name = 'metadata-container';
+		this.getOrCreateDefinition(name, MetadataDefinition);
 		return name;
 	}
 
