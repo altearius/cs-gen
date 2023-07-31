@@ -6,6 +6,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import type IContentType from '../models/IContentType.js';
 
 import GlobalFieldsQuery from '#src/pull/GlobalFieldsQuery.js';
+import FixturePath from '#test/helpers/FixturePath.js';
 
 describe(GlobalFieldsQuery.name, () => {
 	// 2023-07-19: Contentstack observed delivering a response with a missing
@@ -38,12 +39,7 @@ describe(GlobalFieldsQuery.name, () => {
 });
 
 async function loadFixture() {
-	const fixturePath = resolve(
-		process.cwd(),
-		'test',
-		'fixtures',
-		'GetAllGlobalFieldsResponse.json'
-	);
+	const fixturePath = resolve(FixturePath, 'GetAllGlobalFieldsResponse.json');
 
 	const rawFixture = await readFile(fixturePath, 'utf8');
 	return JSON.parse(rawFixture) as unknown;

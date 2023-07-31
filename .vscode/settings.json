@@ -20,5 +20,10 @@
 	"typescript.preferences.importModuleSpecifier": "project-relative",
 	"typescript.preferences.importModuleSpecifierEnding": "js",
 	"typescript.tsc.autoDetect": "off",
-	"typescript.tsdk": "node_modules/typescript/lib"
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"eslint.rules.customizations": [
+		{ "rule": "jest/expect-expect", "severity": "off" },
+		{ "rule": "jest/no-focused-tests", "severity": "off" },
+		{ "rule": "import/order", "severity": "off" }
+	]
 }

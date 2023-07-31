@@ -40,6 +40,15 @@ export default class SchemaWalker {
 		}
 	}
 
+	public toJsonSchema() {
+		const jsonSchema = [...this].reduce(
+			(top, [uid, schema]) => top.definition(uid, schema),
+			S.object()
+		);
+
+		return jsonSchema.valueOf();
+	}
+
 	public [Symbol.iterator]() {
 		return this._definitions[Symbol.iterator]();
 	}
@@ -57,13 +66,9 @@ export default class SchemaWalker {
 	}
 
 	private processContentTypeInterior(contentType: IContentType) {
-		const required = contentType.schema
-			.filter((s) => s.mandatory)
-			.map((s) => s.uid);
-
 		return contentType.schema.reduce(
 			(s, field) => s.prop(field.uid, this.processField(field)),
-			S.object().required(required)
+			S.object().required(identifyRequiredFields(contentType))
 		);
 	}
 
@@ -335,4 +340,21 @@ function handleMultiple(field: IContentField, schema: ISchema) {
 	}
 
 	return array;
+}
+
+function identifyRequiredFields(contentType: IContentType) {
+	// Mandatory fields are required because they are mandatory.
+	//
+	// Multiple fields are required because Contentstack always returns an array.
+	// The array is empty if there are no values.
+	//
+	// Link fields are required because Contentstack always returns an object.
+	// The object has empty strings for "title" and "href" if there is no value.
+	// Last observed on 2023-07-31.
+	const mandatory = contentType.schema.filter(
+		(s) => s.mandatory || s.multiple || s.data_type === 'link'
+	);
+
+	const required = new Set(mandatory.map((s) => s.uid));
+	return [...required].sort();
 }

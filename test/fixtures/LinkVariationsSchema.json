@@ -1,0 +1,67 @@
+{
+	"allOf": [
+		{
+			"$ref": "#/definitions/contentstack-entry"
+		},
+		{
+			"properties": {
+				"multiple_link_defaults": {
+					"description": "Multiple Link, Defaults",
+					"items": {
+						"$ref": "#/definitions/link-field"
+					},
+					"type": "array"
+				},
+				"multiple_link_no_defaults": {
+					"description": "Multiple Link, No Defaults",
+					"items": {
+						"$ref": "#/definitions/link-field"
+					},
+					"type": "array"
+				},
+				"multiple_link_required_defaults": {
+					"description": "Multiple Link, Required, Defaults",
+					"items": {
+						"$ref": "#/definitions/link-field"
+					},
+					"type": "array"
+				},
+				"multiple_link_required_no_defaults": {
+					"description": "Multiple Link, Required, No Defaults",
+					"items": {
+						"$ref": "#/definitions/link-field"
+					},
+					"type": "array"
+				},
+				"single_link_defaults": {
+					"$ref": "#/definitions/link-field"
+				},
+				"single_link_no_defaults": {
+					"$ref": "#/definitions/link-field"
+				},
+				"single_link_required_defaults": {
+					"$ref": "#/definitions/link-field"
+				},
+				"single_link_required_no_defaults": {
+					"$ref": "#/definitions/link-field"
+				},
+				"title": {
+					"description": "Title",
+					"type": "string"
+				}
+			},
+			"required": [
+				"multiple_link_defaults",
+				"multiple_link_no_defaults",
+				"multiple_link_required_defaults",
+				"multiple_link_required_no_defaults",
+				"single_link_defaults",
+				"single_link_no_defaults",
+				"single_link_required_defaults",
+				"single_link_required_no_defaults",
+				"title"
+			],
+			"type": "object"
+		}
+	]
+}

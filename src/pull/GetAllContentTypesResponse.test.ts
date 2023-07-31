@@ -7,6 +7,8 @@ import Ajv from 'ajv';
 
 import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema';
 
+import FixturePath from '#test/helpers/FixturePath.js';
+
 describe('GetAllContentTypesResponse.schema', () => {
 	it('should validate known-good JSON', async () => {
 		// Arrange
@@ -30,12 +32,7 @@ describe('GetAllContentTypesResponse.schema', () => {
 });
 
 async function loadFixture() {
-	const fixturePath = resolve(
-		process.cwd(),
-		'test',
-		'fixtures',
-		'GetAllContentTypesResponse.json'
-	);
+	const fixturePath = resolve(FixturePath, 'GetAllContentTypesResponse.json');
 
 	const rawFixture = await readFile(fixturePath, 'utf8');
 	return JSON.parse(rawFixture) as unknown;

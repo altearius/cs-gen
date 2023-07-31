@@ -4,7 +4,8 @@
 		"outDir": "../.jest/tsc",
 		"rootDir": "../",
 		"paths": {
-			"#src/*": ["../src/*"]
+			"#src/*": ["../src/*"],
+			"#test/*": ["../test/*"]
 		}
 	},
 	"include": ["../src/@types/**/*.d.ts", "../src/**/*.test.ts", "./**/*.ts"],
