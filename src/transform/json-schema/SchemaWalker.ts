@@ -68,7 +68,7 @@ export default class SchemaWalker {
 	private processContentTypeInterior(contentType: IContentType) {
 		return contentType.schema.reduce(
 			(s, field) => s.prop(field.uid, this.processField(field)),
-			S.object().required(identifyRequiredFields(contentType))
+			S.object().required(identifyRequiredFields(contentType.schema))
 		);
 	}
 
@@ -229,7 +229,9 @@ export default class SchemaWalker {
 			(blockScheme, blockField) =>
 				blockScheme.prop(blockField.uid, this.processField(blockField)),
 
-			S.object().required(identifyRequiredFields(block)).title(block.title)
+			S.object()
+				.required(identifyRequiredFields(block.schema))
+				.title(block.title)
 		);
 
 		return S.object().allOf([
@@ -254,6 +256,8 @@ export default class SchemaWalker {
 			const fieldSchema = this.processField(field);
 			groupSchema = groupSchema.prop(field.uid, fieldSchema);
 		}
+
+		groupSchema = groupSchema.required(identifyRequiredFields(group.schema));
 
 		if (group.multiple) {
 			groupSchema = S.object().allOf([
@@ -340,7 +344,7 @@ function handleMultiple(field: IContentField, schema: ISchema) {
 	return array;
 }
 
-function identifyRequiredFields(contentType: IContentType) {
+function identifyRequiredFields(schema: readonly IContentField[]) {
 	// Mandatory fields are required because they are mandatory.
 	//
 	// Multiple fields are required because Contentstack always returns an array.
@@ -349,8 +353,15 @@ function identifyRequiredFields(contentType: IContentType) {
 	// Link fields are required because Contentstack always returns an object.
 	// The object has empty strings for "title" and "href" if there is no value.
 	// Last observed on 2023-07-31.
-	const mandatory = contentType.schema.filter(
-		(s) => s.mandatory || s.multiple || s.data_type === 'link'
+	//
+	// Group fields are required because Contentstack always returns an object.
+	// Last observed on 2023-07-31.
+	const mandatory = schema.filter(
+		(s) =>
+			s.mandatory ||
+			s.multiple ||
+			s.data_type === 'link' ||
+			s.data_type === 'group'
 	);
 
 	const required = new Set(mandatory.map((s) => s.uid));
