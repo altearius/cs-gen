@@ -34,16 +34,20 @@
 					"type": "array"
 				},
 				"single_link_defaults": {
-					"$ref": "#/definitions/link-field"
+					"$ref": "#/definitions/link-field",
+					"description": "Single Link, Defaults"
 				},
 				"single_link_no_defaults": {
-					"$ref": "#/definitions/link-field"
+					"$ref": "#/definitions/link-field",
+					"description": "Single Link, No Defaults"
 				},
 				"single_link_required_defaults": {
-					"$ref": "#/definitions/link-field"
+					"$ref": "#/definitions/link-field",
+					"description": "Single Link, Required, Defaults"
 				},
 				"single_link_required_no_defaults": {
-					"$ref": "#/definitions/link-field"
+					"$ref": "#/definitions/link-field",
+					"description": "Single Link, Required, No Defaults"
 				},
 				"title": {
 					"description": "Title",

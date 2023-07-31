@@ -18,7 +18,6 @@
     "@eslint/js": "^8.45.0",
     "@types/json-schema": "7.X.X",
     "@types/node": "18.X.X",
-    "@types/prettier": "2.X.X",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^8.45.0",
