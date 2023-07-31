@@ -225,13 +225,11 @@ export default class SchemaWalker {
 				.title(block.title);
 		}
 
-		const required = block.schema.filter((x) => x.mandatory).map((x) => x.uid);
-
 		const blockSchema = block.schema.reduce(
 			(blockScheme, blockField) =>
 				blockScheme.prop(blockField.uid, this.processField(blockField)),
 
-			S.object().required(required).title(block.title)
+			S.object().required(identifyRequiredFields(block)).title(block.title)
 		);
 
 		return S.object().allOf([
