@@ -1,10 +1,7 @@
 import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
 
 import type { AnySchemaObject } from 'ajv';
 import Ajv from 'ajv';
-
-import SchemaPath from './SchemaPath.js';
 
 export async function BuildValidator<T>(schemaName: string) {
 	const [schema, contentFieldSchema] = await Promise.all([
@@ -27,8 +24,10 @@ export async function BuildValidator<T>(schemaName: string) {
 }
 
 async function readSchemaFile(name: string): Promise<AnySchemaObject> {
-	const schemaPath = resolve(SchemaPath(), `${name}.schema.json`);
-	const raw = await readFile(schemaPath, 'utf8');
+	const thisFileUrl = new URL(import.meta.url);
+	const schemaName = `./${name}.schema.json`;
+	const schemaUrl = new URL(schemaName, thisFileUrl);
+	const raw = await readFile(schemaUrl, 'utf8');
 	const parsed = JSON.parse(raw) as unknown;
 
 	if (typeof parsed !== 'object' || parsed === null) {
