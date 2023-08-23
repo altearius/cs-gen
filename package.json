@@ -54,5 +54,5 @@
     "test": "node --experimental-vm-modules --enable-source-maps --no-warnings $(yarn bin jest) --config .jest/tsc/test/jest.config.js"
   },
   "type": "module",
-  "version": "0.1.7"
+  "version": "0.1.8"
 }
