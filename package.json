@@ -36,7 +36,7 @@
     "#src/*.js": "./dist/*.js"
   },
   "license": "MIT",
-  "main": "dist/cs-gen.js",
+  "main": "dist/generate/Generate.js",
   "name": "@altearius/cs-gen",
   "packageManager": "yarn@4.2.2",
   "repository": {

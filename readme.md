@@ -47,6 +47,8 @@ yarn add ajv
 `cs-gen` can generate JSON Schema documents, TypeScript definitions, and
 standalone validation code.
 
+### CLI
+
 A CLI is provided:
 
 ```bash
@@ -96,6 +98,31 @@ Output both a JSON Schema and JavaScript validation code:
 yarn cs-gen generate \
   --json-schema-path ./Contentstack.schema.json \
   --validation-path ./src/validation
+```
+
+### API
+
+A single method is exposed:
+
+```ts
+import Generate from '@altearius/cs-gen';
+
+await Generate({
+  // Required:
+  apiKey: '...',
+  baseUrl: '...',
+  branch: '...',
+  managementToken: '...',
+
+  // Specify one or more of the following:
+  jsonSchemaPath: 'Models.yaml',
+  typescriptPath: 'Models.d.yaml.ts',
+  validationPath: 'Validation',
+  responsePath: 'Responses',
+
+  // Optional:
+  prefix: 'IContentstack'
+});
 ```
 
 ## Limitations
