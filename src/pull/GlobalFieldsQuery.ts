@@ -23,9 +23,10 @@ export default class GlobalFieldsQuery extends ContentstackQuery<IGetAllGlobalFi
 		return new GlobalFieldsQuery(options, validator);
 	}
 
-	protected override resolveCount(
-		{ count, global_fields }: IGetAllGlobalFieldsResponse
-	): number {
+	protected override resolveCount({
+		count,
+		global_fields
+	}: IGetAllGlobalFieldsResponse): number {
 		if (count === undefined) {
 			if (global_fields.length === 0) {
 				return 0;

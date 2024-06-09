@@ -306,9 +306,10 @@ export default class SchemaWalker {
 	}
 }
 
-function applyBaseFieldsFrom(
-	{ display_name: title, field_metadata: { description } = {} }: IContentField
-) {
+function applyBaseFieldsFrom({
+	display_name: title,
+	field_metadata: { description } = {}
+}: IContentField) {
 	const docs =
 		typeof description === 'string' && description.length > 0
 			? description
