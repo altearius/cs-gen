@@ -68,17 +68,19 @@ you want. This is done with one of the following options:
 All options may also be provided as environment variables. `cs-gen` honors
 any `.env` file it finds in the working directory.
 
-| Option             | Environment Variable    | Description                  |
-| ------------------ | ----------------------- | ---------------------------- |
-| --api-key          | Cs_gen_api_key          | Contentstack API key         |
-| --base-url         | Cs_gen_base_url         | Contentstack API base URL    |
-| --branch           | Cs_gen_branch           | Contentstack branch          |
-| --json-schema-path | Cs_gen_json_schema_path | Output a JSON schema         |
-| --management-token | Cs_gen_management_token | API management token         |
-| --prefix           | Cs_gen_prefix           | Prefix for TS interfaces     |
-| --response-path    | Cs_gen_response_path    | Output raw API responses     |
-| --typescript-path  | Cs_gen_typescript_path  | Output TypeScript interfaces |
-| --validation-path  | Cs_gen_validation_path  | Output validation code       |
+| Option             | Environment Variable    | Description                   |
+| ------------------ | ----------------------- | ----------------------------- |
+| --api-key          | Cs_gen_api_key          | Contentstack API key          |
+| --base-url         | Cs_gen_base_url         | Contentstack API base URL     |
+| --branch           | Cs_gen_branch           | Contentstack branch           |
+| --exclude          |                         | Exclude specified UIDs        |
+| --include          |                         | Include _only_ specified UIDs |
+| --json-schema-path | Cs_gen_json_schema_path | Output a JSON schema          |
+| --management-token | Cs_gen_management_token | API management token          |
+| --prefix           | Cs_gen_prefix           | Prefix for TS interfaces      |
+| --response-path    | Cs_gen_response_path    | Output raw API responses      |
+| --typescript-path  | Cs_gen_typescript_path  | Output TypeScript interfaces  |
+| --validation-path  | Cs_gen_validation_path  | Output validation code        |
 
 ## Example
 
@@ -98,6 +100,14 @@ Output both a JSON Schema and JavaScript validation code:
 yarn cs-gen generate \
   --json-schema-path ./Contentstack.schema.json \
   --validation-path ./src/validation
+```
+
+Generate TypeScript types only specific content types:
+
+```bash
+yarn cs-gen generate \
+  --typescript-path ./models/Contentstack.d.ts \
+  --include entity1 entity2 entity3
 ```
 
 ### API
@@ -121,7 +131,8 @@ await Generate({
   responsePath: 'Responses',
 
   // Optional:
-  prefix: 'IContentstack'
+  prefix: 'IContentstack',
+  filter: (uid: string) => true
 });
 ```
 
@@ -192,6 +203,7 @@ encounter.
 | Schemas support lazy-loading         | ✓           | ✗           |
 | Honors `prettier` configuration      | ✓           | ✗           |
 | `.env` file configuration            | ✓           | ✗           |
+| Can filter generated types           | ✓           | ✗           |
 | Requires the Contentstack CLI        | ✗           | ✓           |
 | Default installation method          | per-project | per-machine |
 
@@ -333,11 +345,6 @@ const enum ContentType {
 This gives me intellisense support for the different content types that I have
 in my stack. Right now, I have to maintain this manually. I could be generating
 this instead.
-
----
-
-It would be nice to be able to white-list or black-list specific content types
-for the generation process. Might not need every possible content type.
 
 ---
 

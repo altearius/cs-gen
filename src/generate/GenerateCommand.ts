@@ -24,7 +24,12 @@ const GenerateCommand = new Command('generate')
 	.addOption(TypeScriptPathOption)
 	.addOption(ValidationCodePathOption);
 
-GenerateCommand.action(async (options: IOptions) => {
+type CommandOptions = Omit<IOptions, 'filter'> & {
+	readonly include?: readonly string[];
+	readonly exclude?: readonly string[];
+};
+
+GenerateCommand.action(async (options: CommandOptions) => {
 	const { jsonSchemaPath, validationPath, typescriptPath, responsePath } =
 		options;
 
@@ -33,7 +38,21 @@ GenerateCommand.action(async (options: IOptions) => {
 		return;
 	}
 
-	await Generate(options);
+	await Generate({
+		...options,
+		filter: generateFilter(options)
+	});
 });
 
 export default GenerateCommand;
+
+function generateFilter({ include, exclude }: CommandOptions) {
+	const included = new Set(include);
+	const excluded = new Set(exclude);
+
+	if (include) {
+		return (uid: string) => included.has(uid) && !excluded.has(uid);
+	}
+
+	return (uid: string) => !excluded.has(uid);
+}

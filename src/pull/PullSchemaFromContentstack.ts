@@ -31,8 +31,9 @@ export default async function PullSchemaFromContentstack(
 		globalsPromise
 	]);
 
-	const contentTypes = indexByUid(types);
-	const globalTypes = indexByUid(globals);
+	const filter = options.filter ?? (() => true);
+	const contentTypes = indexByUid(filter, types);
+	const globalTypes = indexByUid(filter, globals);
 	await Promise.all([saveContentTypes, saveGlobals]);
 
 	return { contentTypes, globalTypes };
@@ -53,9 +54,14 @@ async function saveResponse(
 }
 
 function indexByUid<T extends { readonly uid: string }>(
+	filter: (uid: string) => boolean,
 	list: readonly T[]
 ): ReadonlyMap<string, T> {
 	return list.reduce((map, item) => {
+		if (!filter(item.uid)) {
+			return map;
+		}
+
 		if (map.has(item.uid)) {
 			throw new Error(`Duplicate content type UID: ${item.uid}`);
 		}
