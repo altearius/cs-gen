@@ -2,6 +2,7 @@ import type { ValidateFunction } from 'ajv';
 import { inspect } from 'node:util';
 import type IContentType from '../models/IContentType.js';
 import type IOptions from '../models/IOptions.js';
+import ContentstackError from './ContentstackError.js';
 
 interface IResponse {
 	readonly [k: string]: unknown;
@@ -68,11 +69,9 @@ export default abstract class ContentstackQuery<TResponse extends IResponse> {
 			method: 'GET'
 		});
 
-		const body = await response.json();
+		await ContentstackError.throwIfNotOk(response);
 
-		if (!response.ok) {
-			throw new Error(`Failed to get content types: ${response.statusText}`);
-		}
+		const body = await response.json();
 
 		if (!this._validator(body)) {
 			const errors = inspect(this._validator.errors, {
