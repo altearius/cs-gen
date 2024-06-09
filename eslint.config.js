@@ -19,24 +19,7 @@ export default [
 		linterOptions: { reportUnusedDisableDirectives: true },
 		rules: {
 			...js.configs.recommended.rules,
-			...prettier.rules,
-
-			// "import/no-unresolved" is broken in vanilla JS due to a lack of
-			// support for resolving ESM modules that use "exports" instead of "main"
-			// in the package.json file, see:
-			//
-			// https://github.com/browserify/resolve/issues/222
-			'import/no-unresolved': 'off',
-
-			'import/order': ['error', { 'newlines-between': 'always' }],
-			'import/no-amd': 'error',
-			'import/no-commonjs': 'error',
-			'import/no-absolute-path': 'error',
-			'import/no-relative-packages': 'error',
-			'import/no-self-import': 'error',
-			'import/no-useless-path-segments': 'error',
-			'import/no-webpack-loader-syntax': 'error',
-			'import/consistent-type-specifier-style': ['error', 'prefer-top-level']
+			...prettier.rules
 		}
 	},
 	{
@@ -63,8 +46,6 @@ export default [
 			...ts.configs['strict-type-checked'].rules,
 			...prettier.rules,
 
-			'import/no-unresolved': 'error',
-
 			// This rule is turned on by one of the recommended base sets,
 			// but it conflicts with @typescript-eslint/promise-function-async,
 			// and also yields false positives when (for instance), an interface
@@ -79,13 +60,6 @@ export default [
 		languageOptions: {
 			parserOptions: {
 				project: ['src/tsconfig.json', 'test/tsconfig.json']
-			}
-		},
-		settings: {
-			'import/resolver': {
-				typescript: {
-					project: ['src/tsconfig.json', 'test/tsconfig.json']
-				}
 			}
 		},
 		rules: {

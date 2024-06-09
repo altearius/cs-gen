@@ -23,7 +23,6 @@
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"eslint.rules.customizations": [
 		{ "rule": "jest/expect-expect", "severity": "off" },
-		{ "rule": "jest/no-focused-tests", "severity": "off" },
-		{ "rule": "import/order", "severity": "off" }
+		{ "rule": "jest/no-focused-tests", "severity": "off" }
 	]
 }
