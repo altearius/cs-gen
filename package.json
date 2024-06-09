@@ -28,8 +28,7 @@
     "fast-glob": "^3.3.2",
     "globals": "^15.4.0",
     "jest": "^29.7.0",
-    "typescript": "^5.4.5",
-    "undici": "^6.18.2"
+    "typescript": "^5.4.5"
   },
   "imports": {
     "#src/*.js": "./dist/*.js"
