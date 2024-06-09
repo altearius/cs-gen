@@ -36,7 +36,7 @@
   "license": "MIT",
   "main": "dist/cs-gen.js",
   "name": "@altearius/cs-gen",
-  "private": false,
+  "packageManager": "yarn@4.2.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/altearius/cs-gen"
