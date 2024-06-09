@@ -1,12 +1,9 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-
-import { describe, expect, it, jest } from '@jest/globals';
-
-import type IContentType from '../models/IContentType.js';
-
 import GlobalFieldsQuery from '#src/pull/GlobalFieldsQuery.js';
 import FixturePath from '#test/helpers/FixturePath.js';
+import { describe, expect, it, jest } from '@jest/globals';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import type IContentType from '../models/IContentType.js';
 
 describe(GlobalFieldsQuery.name, () => {
 	// 2023-07-19: Contentstack observed delivering a response with a missing

@@ -1,7 +1,5 @@
-import { inspect } from 'node:util';
-
 import S from 'fluent-json-schema';
-
+import { inspect } from 'node:util';
 import type IContentType from '../../models/IContentType.js';
 import type {
 	IBlocksContentField,
@@ -17,7 +15,6 @@ import type {
 	IReferenceContentField,
 	ITextContentField
 } from '../../pull/ContentField.schema.js';
-
 import EntryDefinition from './EntryDefinition.js';
 import HostedFileDefinition from './HostedFileDefinition.js';
 import type ISchema from './ISchema.js';
@@ -309,10 +306,9 @@ export default class SchemaWalker {
 	}
 }
 
-function applyBaseFieldsFrom({
-	display_name: title,
-	field_metadata: { description } = {}
-}: IContentField) {
+function applyBaseFieldsFrom(
+	{ display_name: title, field_metadata: { description } = {} }: IContentField
+) {
 	const docs =
 		typeof description === 'string' && description.length > 0
 			? description

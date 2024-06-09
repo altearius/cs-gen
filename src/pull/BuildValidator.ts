@@ -1,7 +1,6 @@
-import { readFile } from 'node:fs/promises';
-
 import type { AnySchemaObject } from 'ajv';
 import Ajv from 'ajv';
+import { readFile } from 'node:fs/promises';
 
 export async function BuildValidator<T>(schemaName: string) {
 	const [schema, contentFieldSchema] = await Promise.all([

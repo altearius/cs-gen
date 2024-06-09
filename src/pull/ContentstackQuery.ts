@@ -1,7 +1,5 @@
-import { inspect } from 'node:util';
-
 import type { ValidateFunction } from 'ajv';
-
+import { inspect } from 'node:util';
 import type IContentType from '../models/IContentType.js';
 import type IOptions from '../models/IOptions.js';
 

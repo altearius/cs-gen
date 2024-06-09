@@ -1,9 +1,7 @@
 import { join } from 'node:path';
-
 import type IContentType from '../models/IContentType.js';
 import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
-
 import GetContentTypes from './GetContentTypes.js';
 import GetGlobalFields from './GetGlobalFields.js';
 

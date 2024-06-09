@@ -1,8 +1,6 @@
 import type { ValidateFunction } from 'ajv';
-
 import type IContentType from '../models/IContentType.js';
 import type IOptions from '../models/IOptions.js';
-
 import { BuildValidator } from './BuildValidator.js';
 import ContentstackQuery from './ContentstackQuery.js';
 import type { IGetAllGlobalFieldsResponse } from './GetAllGlobalFieldsResponse.schema.js';
@@ -25,10 +23,9 @@ export default class GlobalFieldsQuery extends ContentstackQuery<IGetAllGlobalFi
 		return new GlobalFieldsQuery(options, validator);
 	}
 
-	protected override resolveCount({
-		count,
-		global_fields
-	}: IGetAllGlobalFieldsResponse): number {
+	protected override resolveCount(
+		{ count, global_fields }: IGetAllGlobalFieldsResponse
+	): number {
 		if (count === undefined) {
 			if (global_fields.length === 0) {
 				return 0;

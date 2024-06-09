@@ -3,7 +3,6 @@
 import { Command } from 'commander';
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-
 import GenerateCommand from './generate/GenerateCommand.js';
 
 const resolvedEnv = dotenv.config();

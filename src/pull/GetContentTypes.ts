@@ -1,5 +1,4 @@
 import type IOptions from '../models/IOptions.js';
-
 import { BuildValidator } from './BuildValidator.js';
 import ContentTypesQuery from './ContentTypesQuery.js';
 import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema.js';

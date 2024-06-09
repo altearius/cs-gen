@@ -1,13 +1,10 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-
-import { describe, expect, it } from '@jest/globals';
-
-import IContentType from '../../models/IContentType.js';
-
 import SchemaCollection from '#src/transform/json-schema/SchemaCollection.js';
 import SchemaWalker from '#src/transform/json-schema/SchemaWalker.js';
 import FixturePath from '#test/helpers/FixturePath.js';
+import { describe, expect, it } from '@jest/globals';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import IContentType from '../../models/IContentType.js';
 
 describe(SchemaWalker.name, () => {
 	it('generates appropriate schema for link fields', async () => {

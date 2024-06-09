@@ -1,6 +1,5 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-
 import prettier from 'prettier';
 
 type IParser = NonNullable<Parameters<typeof prettier.format>[1]>['parser'];

@@ -1,8 +1,6 @@
 import c from 'ansi-colors';
 import { Command } from 'commander';
-
 import type IOptions from '../models/IOptions.js';
-
 import Generate from './Generate.js';
 import ApiKeyOption from './options/ApiKeyOption.js';
 import BaseUrlOption from './options/BaseUrlOption.js';

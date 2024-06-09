@@ -1,5 +1,4 @@
 import type IContentType from '../../models/IContentType.js';
-
 import ReferenceFinder from './ReferenceFinder.js';
 
 type ITypeCollection = ReadonlyMap<string, IContentType>;

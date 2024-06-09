@@ -1,9 +1,7 @@
 import type { SchemaObject } from 'ajv';
-
 import type IContentType from '../../models/IContentType.js';
 import type IOptions from '../../models/IOptions.js';
 import FormatAndSave from '../../services/FormatAndSave.js';
-
 import SchemaCollection from './SchemaCollection.js';
 import SchemaWalker from './SchemaWalker.js';
 

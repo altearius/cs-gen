@@ -1,6 +1,5 @@
-import { resolve } from 'node:path';
-
 import { Option } from 'commander';
+import { resolve } from 'node:path';
 
 const TypeScriptPathOption = new Option(
 	'--typescript-path <path>',

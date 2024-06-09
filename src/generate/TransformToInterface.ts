@@ -1,7 +1,6 @@
 import type { SchemaObject } from 'ajv';
 import type { JSONSchema4 } from 'json-schema';
 import { compile } from 'json-schema-to-typescript';
-
 import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
 

@@ -1,13 +1,10 @@
+import FixturePath from '#test/helpers/FixturePath.js';
+import { describe, expect, it } from '@jest/globals';
+import Ajv from 'ajv';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { inspect } from 'node:util';
-
-import { describe, expect, it } from '@jest/globals';
-import Ajv from 'ajv';
-
 import type { IGetAllContentTypesResponse } from './GetAllContentTypesResponse.schema';
-
-import FixturePath from '#test/helpers/FixturePath.js';
 
 describe('GetAllContentTypesResponse.schema', () => {
 	it('should validate known-good JSON', async () => {

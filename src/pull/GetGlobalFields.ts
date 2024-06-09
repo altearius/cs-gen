@@ -1,5 +1,4 @@
 import type IOptions from '../models/IOptions.js';
-
 import GlobalFieldsQuery from './GlobalFieldsQuery.js';
 
 export default async function GetGlobalFields(options: IOptions) {
