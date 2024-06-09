@@ -9,6 +9,7 @@
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "fluent-json-schema": "^4.2.1",
+    "js-yaml": "^4.1.0",
     "json-schema-to-typescript": "^14.0.5",
     "prettier": "^3.3.1",
     "tslib": "^2.6.3"
@@ -16,6 +17,7 @@
   "description": "Generate code based on a Contentstack stack",
   "devDependencies": {
     "@eslint/js": "^9.4.0",
+    "@types/js-yaml": "^4",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^7.12.0",

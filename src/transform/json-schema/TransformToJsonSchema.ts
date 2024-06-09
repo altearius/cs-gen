@@ -1,4 +1,6 @@
 import type { SchemaObject } from 'ajv';
+import yaml from 'js-yaml';
+import { extname } from 'node:path';
 import type IContentType from '../../models/IContentType.js';
 import type IOptions from '../../models/IOptions.js';
 import FormatAndSave from '../../services/FormatAndSave.js';
@@ -27,6 +29,8 @@ async function saveJsonSchema(
 		return;
 	}
 
-	const value = JSON.stringify(jsonSchema);
-	await FormatAndSave(jsonSchemaPath, 'json', value);
+	const extension = extname(jsonSchemaPath);
+	const isYaml = extension === '.yaml' || extension === '.yml';
+	const value = isYaml ? yaml.dump(jsonSchema) : JSON.stringify(jsonSchema);
+	await FormatAndSave(jsonSchemaPath, isYaml ? 'yaml' : 'json', value);
 }

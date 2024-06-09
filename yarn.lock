@@ -10,6 +10,7 @@ __metadata:
   resolution: "@altearius/cs-gen@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.4.0"
+    "@types/js-yaml": "npm:^4"
     "@types/json-schema": "npm:^7.0.15"
     "@types/node": "npm:^20.14.2"
     "@typescript-eslint/eslint-plugin": "npm:^7.12.0"
@@ -29,6 +30,7 @@ __metadata:
     fluent-json-schema: "npm:^4.2.1"
     globals: "npm:^15.4.0"
     jest: "npm:^29.7.0"
+    js-yaml: "npm:^4.1.0"
     json-schema-to-typescript: "npm:^14.0.5"
     prettier: "npm:^3.3.1"
     tslib: "npm:^2.6.3"
@@ -1003,6 +1005,13 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "npm:*"
   checksum: 10c0/1647fd402aced5b6edac87274af14ebd6b3a85447ef9ad11853a70fd92a98d35f81a5d3ea9fcb5dbb5834e800c6e35b64475e33fcae6bfa9acc70d61497c54ee
+  languageName: node
+  linkType: hard
+
+"@types/js-yaml@npm:^4":
+  version: 4.0.9
+  resolution: "@types/js-yaml@npm:4.0.9"
+  checksum: 10c0/24de857aa8d61526bbfbbaa383aa538283ad17363fcd5bb5148e2c7f604547db36646440e739d78241ed008702a8920665d1add5618687b6743858fae00da211
   languageName: node
   linkType: hard
 
