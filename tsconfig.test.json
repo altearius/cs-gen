@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"outDir": "./.jest/tsc",
+		"paths": {
+			"#src/*": ["./src/*"],
+			"#test/*": ["./test/*"]
+		},
+		"rootDir": "."
+	},
+	"extends": "./tsconfig.base.json",
+	"include": ["./src/**/*.test.ts", "./test/**/*.ts"],
+	"references": [{ "path": "./src/tsconfig.json" }]
+}

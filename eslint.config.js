@@ -59,7 +59,7 @@ export default [
 		plugins: { jest },
 		languageOptions: {
 			parserOptions: {
-				project: ['src/tsconfig.json', 'test/tsconfig.json']
+				project: ['./src/tsconfig.json', './tsconfig.test.json']
 			}
 		},
 		rules: {
