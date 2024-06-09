@@ -1,5 +1,4 @@
 import globals from 'globals';
-import imports from 'eslint-plugin-import';
 import jest from 'eslint-plugin-jest';
 import js from '@eslint/js';
 import ts from '@typescript-eslint/eslint-plugin';
@@ -18,10 +17,8 @@ export default [
 			'src/pull/*.schema.d.ts'
 		],
 		linterOptions: { reportUnusedDisableDirectives: true },
-		plugins: { import: imports },
 		rules: {
 			...js.configs.recommended.rules,
-			...imports.configs.recommended.rules,
 			...prettier.rules,
 
 			// "import/no-unresolved" is broken in vanilla JS due to a lack of
@@ -48,10 +45,7 @@ export default [
 			// schema.d.ts files are generated code.
 			'src/pull/*.schema.d.ts'
 		],
-		plugins: {
-			'@typescript-eslint': ts,
-			import: imports
-		},
+		plugins: { '@typescript-eslint': ts },
 
 		languageOptions: {
 			globals: {
@@ -64,20 +58,9 @@ export default [
 			}
 		},
 
-		settings: {
-			...imports.configs.typescript.settings,
-			'import/resolver': {
-				...imports.configs.typescript.settings['import/resolver'],
-				typescript: {
-					project: 'src/tsconfig.json'
-				}
-			}
-		},
-
 		rules: {
 			...ts.configs['stylistic-type-checked'].rules,
 			...ts.configs['strict-type-checked'].rules,
-			...imports.configs.typescript.rules,
 			...prettier.rules,
 
 			'import/no-unresolved': 'error',
