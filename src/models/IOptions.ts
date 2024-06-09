@@ -6,6 +6,6 @@ export default interface IOptions {
 	readonly jsonSchemaPath?: string;
 	readonly typescriptPath?: string;
 	readonly validationPath?: string;
-	readonly prefix: string;
+	readonly prefix?: string;
 	readonly responsePath?: string;
 }

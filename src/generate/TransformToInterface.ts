@@ -45,7 +45,7 @@ async function saveInterface({ typescriptPath }: IOptions, result: string) {
 
 function prefixNames(
 	{ definitions = {} }: JSONSchema4,
-	prefix: string
+	prefix: string | undefined
 ): {
 	readonly definitions: Record<string, JSONSchema4>;
 	readonly properties: Record<string, JSONSchema4>;
