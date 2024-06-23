@@ -1,6 +1,6 @@
 export default interface IOptions {
 	readonly apiKey: string;
-	readonly baseUrl: string;
+	readonly baseUrl: URL;
 	readonly branch: string;
 	readonly filter?: (uid: string) => boolean;
 	readonly jsonSchemaPath?: string;
