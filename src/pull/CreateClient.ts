@@ -6,7 +6,7 @@ type Client = ReturnType<typeof CreateClient>;
 export default Client;
 
 export function CreateClient(options: IOptions) {
-	const client = createClient<paths>({ baseUrl: options.baseUrl });
+	const client = createClient<paths>({ baseUrl: options.baseUrl.toString() });
 
 	client.use({
 		onRequest: (o) => {
