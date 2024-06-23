@@ -2,12 +2,15 @@ import S from 'fluent-json-schema';
 import { inspect } from 'node:util';
 import { ContentType } from '../../models/ContentType.schema.yaml';
 import { Field } from '../../models/Field.schema.yaml';
+import type { GlobalField } from '../../pull/GetGlobalFields.js';
 import EntryDefinition from './EntryDefinition.js';
 import HostedFileDefinition from './HostedFileDefinition.js';
 import type ISchema from './ISchema.js';
 import LinkDefinition from './LinkFieldDefinition.js';
 import MetadataDefinition from './MetadataDefinition.js';
 import type SchemaCollection from './SchemaCollection.js';
+
+type FieldContainer = ContentType | GlobalField;
 
 export default class SchemaWalker {
 	private readonly _definitions = new Map<string, ISchema>();
@@ -35,19 +38,19 @@ export default class SchemaWalker {
 		return this._definitions[Symbol.iterator]();
 	}
 
-	private processGlobalType(contentType: ContentType) {
+	private processGlobalType(contentType: FieldContainer) {
 		const schema = this.processContentTypeInterior(contentType);
 		this._definitions.set(contentType.uid, schema);
 	}
 
-	private processContentType(contentType: ContentType) {
+	private processContentType(contentType: FieldContainer) {
 		const entryDef = this.getOrCreateEntryDefinition();
 		const schema = this.processContentTypeInterior(contentType);
 		const base = S.allOf([S.ref(`#/definitions/${entryDef}`), schema]);
 		this._definitions.set(contentType.uid, base);
 	}
 
-	private processContentTypeInterior(contentType: ContentType) {
+	private processContentTypeInterior(contentType: FieldContainer) {
 		return contentType.schema.reduce(
 			(s, field) => s.prop(field.uid, this.processField(field)),
 			S.object().required(identifyRequiredFields(contentType.schema))
@@ -377,7 +380,7 @@ function identifyRequiredFields(schema: readonly Field[]) {
 	const mandatory = schema.filter(
 		(s) =>
 			'taxonomies' in s ||
-			s.mandatory ||
+			s.mandatory === true ||
 			(s.multiple ?? false) ||
 			s.data_type === 'link' ||
 			s.data_type === 'group'
@@ -394,10 +397,5 @@ function isSelectField(field: Field): field is Extract<
 		enum: { advanced: boolean; choices: { value: string }[] };
 	}
 > {
-	return (
-		'data_type' in field &&
-		field.data_type === 'text' &&
-		'enum' in field &&
-		field.enum !== null
-	);
+	return 'data_type' in field && field.data_type === 'text' && 'enum' in field;
 }

@@ -5,12 +5,13 @@ import { describe, expect, it } from '@jest/globals';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { ContentType } from '../../models/ContentType.schema.yaml';
+import type { GlobalField } from '../../pull/GetGlobalFields.js';
 
 describe(SchemaWalker.name, () => {
 	it('generates appropriate schema for link fields', async () => {
 		// Arrange
 		const [contentTypes, expected] = await loadFixtures();
-		const globalTypes = new Map<string, ContentType>();
+		const globalTypes = new Map<string, GlobalField>();
 		const schema = new SchemaCollection(contentTypes, globalTypes);
 		const walker = new SchemaWalker(schema);
 

@@ -15,9 +15,11 @@ properties:
   field_metadata:
     type: object
     properties:
-      default_value: { $ref: './meta/defaultValue.schema.yaml' }
       description: { $ref: './meta/description.schema.yaml' }
       multiline: { $ref: './meta/multiline.schema.yaml' }
+      default_value:
+        type: string
+        description: Allows you to set a default value for a field.
 
   format:
     description: |

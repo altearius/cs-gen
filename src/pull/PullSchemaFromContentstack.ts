@@ -4,13 +4,13 @@ import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
 import { CreateClient } from './CreateClient.js';
 import GetContentTypes from './GetContentTypes.js';
-import GetGlobalFields from './GetGlobalFields.js';
+import GetGlobalFields, { GlobalField } from './GetGlobalFields.js';
 
 export default async function PullSchemaFromContentstack(
 	options: IOptions
 ): Promise<{
 	readonly contentTypes: ReadonlyMap<string, ContentType>;
-	readonly globalTypes: ReadonlyMap<string, ContentType>;
+	readonly globalTypes: ReadonlyMap<string, GlobalField>;
 }> {
 	const client = CreateClient(options);
 	const contentTypesPromise = GetContentTypes(client);

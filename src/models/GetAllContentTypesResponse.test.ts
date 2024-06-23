@@ -1,6 +1,7 @@
 import { GetAllContentTypesResponse as Validator } from '#src/models/validate.mjs';
 import FixturePath from '#test/helpers/FixturePath.js';
 import { describe, expect, it } from '@jest/globals';
+import Ajv from 'ajv';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { inspect } from 'node:util';
@@ -16,8 +17,12 @@ describe('GetAllContentTypesResponse.schema', () => {
 		// Assert
 		if (!result) {
 			if ('errors' in Validator && Array.isArray(Validator.errors)) {
+				const ajv = new Ajv();
+				const msg = ajv.errorsText(Validator.errors);
+
 				console.error(
-					inspect(Validator.errors, { colors: true, depth: Infinity })
+					msg,
+					inspect(Validator.errors, { depth: Infinity, colors: true })
 				);
 			}
 		}

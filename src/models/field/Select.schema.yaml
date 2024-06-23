@@ -53,7 +53,9 @@ properties:
     type: object
     properties:
       description: { $ref: './meta/description.schema.yaml' }
-      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+      default_value:
+        type: string
+        description: Allows you to set a default value for a field.
 
 allOf: [$ref: './StandardField.schema.yaml']
 

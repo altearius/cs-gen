@@ -19,10 +19,12 @@ async function generateCode() {
 		await ajv.compileAsync(value);
 	}
 
-	return standaloneCode(
+	const code = standaloneCode(
 		ajv,
 		Object.fromEntries([...schemas.keys()].map((key) => [key, key]))
 	);
+
+	return transformCjsToEsm(code);
 }
 
 function createAjv(schemas, schemaCache) {
@@ -78,4 +80,12 @@ class SchemaCache {
 
 		return parsed;
 	}
+}
+
+// https://github.com/ajv-validator/ajv/issues/2209
+function transformCjsToEsm(source) {
+	return source.replace(/\brequire\((?<path>[^)]+?)\)/gu, (_, path) => {
+		const withExtension = path.slice(0, -1) + '.js' + path.slice(-1);
+		return `(await import(${withExtension}))`;
+	});
 }

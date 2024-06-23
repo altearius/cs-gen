@@ -6,27 +6,74 @@ description: A Content Type.
 additionalProperties: false
 
 required:
+  - _version
+  - abilities
   - created_at
+  - DEFAULT_ACL
+  - description
+  - last_activity
+  - maintain_revisions
+  - options
   - schema
+  - SYS_ACL
   - title
   - uid
   - updated_at
 
 properties:
+  _version: { type: integer }
+  DEFAULT_ACL: { $ref: './Acl.schema.yaml' }
+  description: { type: string }
+  inbuilt_class: { type: boolean }
+  maintain_revisions: { type: boolean }
+  SYS_ACL: { $ref: './Acl.schema.yaml' }
   title: { type: string }
   uid: { type: string }
+
+  abilities:
+    type: object
+    required:
+      - create_object
+      - delete_all_objects
+      - delete_object
+      - get_all_objects
+      - get_one_object
+      - update_object
+    properties:
+      create_object: { type: boolean }
+      delete_all_objects: { type: boolean }
+      delete_object: { type: boolean }
+      get_all_objects: { type: boolean }
+      get_one_object: { type: boolean }
+      update_object: { type: boolean }
 
   created_at:
     type: string
     format: date-time
 
-  updated_at:
-    type: string
-    format: date-time
-
-  schema:
-    type: array
-    items: { $ref: './Field.schema.yaml' }
+  last_activity:
+    type: object
+    additionalProperties: false
+    properties:
+      environments:
+        type: array
+        items:
+          type: object
+          required: [uid, details]
+          additionalProperties: false
+          properties:
+            uid: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                required: [locale, time]
+                additionalProperties: false
+                properties:
+                  locale: { type: string }
+                  time:
+                    type: string
+                    format: date-time
 
   options:
     type: object
@@ -39,6 +86,14 @@ properties:
       title: { type: string }
       url_pattern: { type: string }
       url_prefix: { type: string }
+
+  schema:
+    type: array
+    items: { $ref: './Field.schema.yaml' }
+
+  updated_at:
+    type: string
+    format: date-time
 
 examples:
   - title: Page

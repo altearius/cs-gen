@@ -17,10 +17,10 @@ properties:
 
   field_metadata:
     type: object
-    required: [ref_multiple, ref_multiple_content_types]
+    required: [ref_multiple]
     properties:
-      ref_multiple: { const: false }
-      ref_multiple_content_types: { const: true }
+      ref_multiple: { type: boolean }
+      ref_multiple_content_types: { type: boolean }
 
 allOf: [$ref: './StandardField.schema.yaml']
 

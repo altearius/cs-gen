@@ -4,12 +4,18 @@ import { GetAllGlobalFieldsResponse } from '../models/GetAllGlobalFieldsResponse
 import { GetAllGlobalFieldsResponse as Validator } from '../models/validate.mjs';
 import Client from './CreateClient.js';
 
+export type GlobalField = Readonly<
+	GetAllGlobalFieldsResponse['global_fields'][number]
+>;
+
 export default async function GetGlobalFields(
 	client: Client
-): Promise<readonly GetAllGlobalFieldsResponse['global_fields'][number][]> {
-	const { data, error } = await client.GET('/v3/global_fields');
-	ContentstackError.throwIfError(error, 'Failed to get content types');
-	const result = data as unknown;
+): Promise<readonly GlobalField[]> {
+	const response = await client.GET('/v3/global_fields');
+
+	ContentstackError.throwIfError(response.error, 'Failed to get content types');
+
+	const result = response.data as unknown;
 
 	if (!isResponse(result)) {
 		if ('errors' in Validator && Array.isArray(Validator.errors)) {

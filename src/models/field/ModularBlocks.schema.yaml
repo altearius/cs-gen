@@ -15,41 +15,27 @@ properties:
   blocks:
     type: array
     items:
-      oneOf:
-        - type: object
-          required: [reference_to, title, uid]
-          properties:
-            reference_to: { type: string }
-            title: { type: string }
-            uid: { type: string }
-
-        - type: object
-          required: [schema, title, uid]
-          properties:
-            autoEdit: { type: boolean }
-            title: { type: string }
-            uid: { type: string }
-            schema:
-              type: array
-              items:
-                oneOf:
-                  - $ref: './Boolean.schema.yaml'
-                  - $ref: './Date.schema.yaml'
-                  - $ref: './Extension.schema.yaml'
-                  - $ref: './File.schema.yaml'
-                  - $ref: './HtmlRte.schema.yaml'
-                  - $ref: './JsonRte.schema.yaml'
-                  - $ref: './Link.schema.yaml'
-                  - $ref: './Markdown.schema.yaml'
-                  - $ref: './Number.schema.yaml'
-                  - $ref: './Reference.schema.yaml'
-                  - $ref: './Select.schema.yaml'
-                  - $ref: './TextBox.schema.yaml'
-
-                  # Note: Group and ModularBlock types are also allowed
-                  # here by Contentstack, but including them currently
-                  # causes an error in json2ts because of the circular
-                  # references.
-                  #
-                  # - $ref: "./Group.schema.yaml"
-                  # - $ref: "./ModularBlocks.schema.yaml"
+      type: object
+      required: [schema, title, uid]
+      properties:
+        reference_to: { type: string }
+        title: { type: string }
+        uid: { type: string }
+        schema:
+          type: array
+          items:
+            anyOf:
+              - $ref: './Boolean.schema.yaml'
+              - $ref: './Date.schema.yaml'
+              - $ref: './Extension.schema.yaml'
+              - $ref: './File.schema.yaml'
+              - $ref: './HtmlRte.schema.yaml'
+              - $ref: './JsonRte.schema.yaml'
+              - $ref: './Link.schema.yaml'
+              - $ref: './Markdown.schema.yaml'
+              - $ref: './Number.schema.yaml'
+              - $ref: './Reference.schema.yaml'
+              - $ref: './Select.schema.yaml'
+              - $ref: './TextBox.schema.yaml'
+              - $ref: './Group.schema.yaml'
+              - $ref: './ModularBlocks.schema.yaml'

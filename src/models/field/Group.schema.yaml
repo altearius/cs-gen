@@ -13,12 +13,13 @@ properties:
     type: array
     items:
       type: object
-      oneOf:
+      anyOf:
         - $ref: './Boolean.schema.yaml'
         - $ref: './Date.schema.yaml'
         - $ref: './Extension.schema.yaml'
         - $ref: './File.schema.yaml'
         - $ref: './Global.schema.yaml'
+        - $ref: './Group.schema.yaml'
         - $ref: './HtmlRte.schema.yaml'
         - $ref: './JsonRte.schema.yaml'
         - $ref: './Link.schema.yaml'
@@ -27,12 +28,6 @@ properties:
         - $ref: './Reference.schema.yaml'
         - $ref: './Select.schema.yaml'
         - $ref: './TextBox.schema.yaml'
-
-        # Note: Group is also allowed here by Contentstack, but including
-        # it currently causes an error in json2ts because of the circular
-        # reference. I think this is related to:
-        # https://github.com/bcherny/json-schema-to-typescript/issues/482
-        # - $ref: './Group.schema.yaml'
 
 examples:
   - data_type: group

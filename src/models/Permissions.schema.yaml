@@ -1,0 +1,8 @@
+$id: Permissions
+type: object
+properties:
+  create: { type: boolean }
+  delete: { type: boolean }
+  publish: { type: boolean }
+  read: { type: boolean }
+  update: { type: boolean }

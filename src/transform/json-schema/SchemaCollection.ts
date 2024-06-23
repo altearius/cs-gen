@@ -1,14 +1,13 @@
 import type { ContentType } from '../../models/ContentType.schema.yaml';
+import type { GlobalField } from '../../pull/GetGlobalFields.js';
 import ReferenceFinder from './ReferenceFinder.js';
 
-type ITypeCollection = ReadonlyMap<string, ContentType>;
-
 export default class SchemaCollection {
-	private readonly _sorted: readonly ContentType[];
+	private readonly _sorted: readonly (ContentType | GlobalField)[];
 
 	public constructor(
-		public readonly contentTypes: ITypeCollection,
-		public readonly globalTypes: ITypeCollection
+		public readonly contentTypes: ReadonlyMap<string, ContentType>,
+		public readonly globalTypes: ReadonlyMap<string, GlobalField>
 	) {
 		const mapped = mapByUid(globalTypes, contentTypes);
 		const set = new Set(mapped.values());
@@ -22,8 +21,13 @@ export default class SchemaCollection {
 	}
 }
 
-function mapByUid(...contentTypes: ITypeCollection[]) {
-	const map = new Map<string, ContentType>();
+function mapByUid(
+	...contentTypes: (
+		| ReadonlyMap<string, ContentType>
+		| ReadonlyMap<string, GlobalField>
+	)[]
+) {
+	const map = new Map<string, ContentType | GlobalField>();
 
 	for (const contentTypeMap of contentTypes) {
 		for (const [uid, type] of contentTypeMap) {
@@ -35,14 +39,17 @@ function mapByUid(...contentTypes: ITypeCollection[]) {
 }
 
 function sortTopologically(
-	contentTypes: ReadonlySet<ContentType>,
-	mapped: ReadonlyMap<string, ContentType>
+	contentTypes: ReadonlySet<ContentType | GlobalField>,
+	mapped: ReadonlyMap<string, ContentType | GlobalField>
 ) {
 	const visited = new Set<string>();
 	const finder = new ReferenceFinder(mapped);
-	const sorted: ContentType[] = [];
+	const sorted: (ContentType | GlobalField)[] = [];
 
-	function visit(contentType: ContentType, ...path: readonly string[]) {
+	function visit(
+		contentType: ContentType | GlobalField,
+		...path: readonly string[]
+	) {
 		throwOnCircularReference(contentType, ...path);
 
 		const { schema, uid } = contentType;
@@ -69,7 +76,7 @@ function sortTopologically(
 }
 
 function throwOnCircularReference(
-	{ uid }: ContentType,
+	{ uid }: ContentType | GlobalField,
 	...path: readonly string[]
 ) {
 	if (path.includes(uid)) {

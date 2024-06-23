@@ -1,8 +1,11 @@
 import type { ContentType } from '../../models/ContentType.schema.yaml';
-import { Field } from '../../models/Field.schema.yaml';
+import type { Field } from '../../models/Field.schema.yaml';
+import type { GlobalField } from '../../pull/GetGlobalFields.js';
 
 export default class ReferenceFinder {
-	public constructor(private readonly _map: ReadonlyMap<string, ContentType>) {}
+	public constructor(
+		private readonly _map: ReadonlyMap<string, ContentType | GlobalField>
+	) {}
 
 	public *findReferencesIn(fields: readonly Field[]) {
 		for (const field of fields) {
@@ -24,14 +27,15 @@ export default class ReferenceFinder {
 		field: Extract<Field, { data_type: 'blocks' }>
 	) {
 		for (const block of field.blocks) {
-			if (!('reference_to' in block)) {
+			const { reference_to } = block;
+			if (!reference_to) {
 				continue;
 			}
 
-			const contentType = this._map.get(block.reference_to);
+			const contentType = this._map.get(reference_to);
 			if (!contentType) {
 				const msg1 = `Block ${block.title} [${block.uid}] references content'`;
-				const msg2 = `type ${block.reference_to}, which cannot be found.`;
+				const msg2 = `type ${reference_to}, which cannot be found.`;
 				const msg = `${msg1} ${msg2}`;
 				throw new Error(msg);
 			}

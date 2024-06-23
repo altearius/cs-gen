@@ -3,16 +3,15 @@ import yaml from 'js-yaml';
 import { extname } from 'node:path';
 import { ContentType } from '../../models/ContentType.schema.yaml';
 import type IOptions from '../../models/IOptions.js';
+import { GlobalField } from '../../pull/GetGlobalFields.js';
 import FormatAndSave from '../../services/FormatAndSave.js';
 import SchemaCollection from './SchemaCollection.js';
 import SchemaWalker from './SchemaWalker.js';
 
-type ITypeCollection = ReadonlyMap<string, ContentType>;
-
 export default async function TransformToJsonSchema(
 	options: IOptions,
-	contentTypes: ITypeCollection,
-	globalTypes: ITypeCollection
+	contentTypes: ReadonlyMap<string, ContentType>,
+	globalTypes: ReadonlyMap<string, GlobalField>
 ): Promise<SchemaObject> {
 	const collection = new SchemaCollection(contentTypes, globalTypes);
 	const walker = new SchemaWalker(collection);

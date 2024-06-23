@@ -4,7 +4,7 @@ description: A single field in a content type.
 
 type: object
 
-oneOf:
+anyOf:
   - $ref: './field/Boolean.schema.yaml'
   - $ref: './field/Date.schema.yaml'
   - $ref: './field/Extension.schema.yaml'

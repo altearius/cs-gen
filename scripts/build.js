@@ -6,13 +6,7 @@ import compileTs from './lib/compile-ts.js';
 import copySchema from './lib/copy-schema.js';
 import setExec from './lib/set-exec.js';
 
-await Promise.all([
-	generateValidation(),
-	generate.field(),
-	generate.contentType(),
-	generate.getAllContentTypesResponse(),
-	generate.getAllGlobalFieldsResponse()
-]);
+await Promise.all([generateValidation(), generate.schemas()]);
 
 compileTs();
 

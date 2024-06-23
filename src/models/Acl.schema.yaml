@@ -1,0 +1,27 @@
+$id: Acl
+description: Access Control List
+type: object
+additionalProperties: false
+properties:
+  management_token: { $ref: './Permissions.schema.yaml' }
+  others: { $ref: './Permissions.schema.yaml' }
+  roles:
+    type: array
+    items:
+      allOf:
+        - $ref: './Permissions.schema.yaml'
+        - type: object
+          required: [uid]
+          properties:
+            uid: { type: string }
+            sub_acl: { $ref: './Permissions.schema.yaml' }
+  users:
+    type: array
+    items:
+      allOf:
+        - $ref: './Permissions.schema.yaml'
+        - type: object
+          required: [uid]
+          properties:
+            uid: { type: string }
+            sub_acl: { $ref: './Permissions.schema.yaml' }

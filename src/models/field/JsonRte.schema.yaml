@@ -15,7 +15,6 @@ properties:
     type: object
     properties:
       allow_json_rte: { const: true }
-      default_value: { $ref: './meta/defaultValue.schema.yaml' }
       description: { $ref: './meta/description.schema.yaml' }
       rich_text_type: { $ref: './meta/richTextType.schema.yaml' }
       options: { $ref: './meta/options.schema.yaml' }

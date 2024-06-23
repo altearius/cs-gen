@@ -10,14 +10,18 @@ required: [data_type]
 
 properties:
   data_type: { const: number }
-  min: { type: number }
-  max: { type: number }
+  min: { type: [number, 'null'] }
+  max: { type: [number, 'null'] }
 
   field_metadata:
     type: object
     properties:
-      default_value: { $ref: './meta/defaultValue.schema.yaml' }
       description: { $ref: './meta/description.schema.yaml' }
+      default_value:
+        description: Allows you to set a default value for a field.
+        oneOf:
+          - type: number
+          - type: string # Observed in GetAllContentTypesResponse.json
 
 allOf: [$ref: './StandardField.schema.yaml']
 
