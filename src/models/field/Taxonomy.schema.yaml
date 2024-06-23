@@ -1,0 +1,33 @@
+type: object
+
+description: |
+  The Taxonomy field allows users to categorize content within your stack to
+  facilitate easy navigation, search, and retrieval of information.
+
+required: [uid, taxonomies]
+
+properties:
+  uid: { type: string }
+  multiple: { type: boolean }
+  taxonomies:
+    type: array
+    items:
+      type: object
+      properties:
+        taxonomy_uid: { type: string }
+        max_terms: { type: number }
+        mandatory: { type: boolean }
+        non_localizable: { type: boolean }
+
+examples:
+  - uid: taxonomies
+    multiple: false
+    taxonomies:
+      - taxonomy_uid: taxonomy_1
+        max_terms: 5
+        mandatory: true
+        non_localizable: false
+      - taxonomy_uid: taxonomy_2
+        max_terms: 10
+        mandatory: false
+        non_localizable: false

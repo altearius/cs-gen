@@ -8,8 +8,9 @@
 
 /.env
 /.jest
+/**/tsconfig.tsbuildinfo
 /dist
 /node_modules
-/src/pull/*.schema.d.ts
-/**/tsconfig.tsbuildinfo
+/src/models/*.schema.d.yaml.ts
+/src/models/validate.mjs
 yarn-error.log

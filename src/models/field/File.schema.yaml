@@ -1,0 +1,30 @@
+type: object
+
+description: The File field lets you upload or use files in your entry.
+
+required: [data_type]
+properties:
+  data_type: { const: file }
+
+  extensions: { type: array }
+
+  field_metadata:
+    type: object
+    required: [rich_text_type]
+    properties:
+      description: { $ref: './meta/description.schema.yaml' }
+      rich_text_type: { const: standard }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: file
+    display_name: File
+    uid: file
+    extensions: []
+    field_metadata:
+      description: ''
+      rich_text_type: standard
+    multiple: false
+    mandatory: false
+    unique: false

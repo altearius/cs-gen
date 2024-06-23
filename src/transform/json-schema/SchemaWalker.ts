@@ -1,28 +1,13 @@
 import S from 'fluent-json-schema';
 import { inspect } from 'node:util';
-import type IContentType from '../../models/IContentType.js';
-import type {
-	IBlocksContentField,
-	IBooleanContentField,
-	IContentField,
-	IDateContentField,
-	IFileContentField,
-	IGlobalContentField,
-	IGroupContentField,
-	IJsonContentField,
-	ILinkContentField,
-	INumberContentField,
-	IReferenceContentField,
-	ITextContentField
-} from '../../pull/ContentField.schema.js';
+import { ContentType } from '../../models/ContentType.schema.yaml';
+import { Field } from '../../models/Field.schema.yaml';
 import EntryDefinition from './EntryDefinition.js';
 import HostedFileDefinition from './HostedFileDefinition.js';
 import type ISchema from './ISchema.js';
 import LinkDefinition from './LinkFieldDefinition.js';
 import MetadataDefinition from './MetadataDefinition.js';
 import type SchemaCollection from './SchemaCollection.js';
-
-type IBlock = IBlocksContentField['blocks'][number];
 
 export default class SchemaWalker {
 	private readonly _definitions = new Map<string, ISchema>();
@@ -50,26 +35,34 @@ export default class SchemaWalker {
 		return this._definitions[Symbol.iterator]();
 	}
 
-	private processGlobalType(contentType: IContentType) {
+	private processGlobalType(contentType: ContentType) {
 		const schema = this.processContentTypeInterior(contentType);
 		this._definitions.set(contentType.uid, schema);
 	}
 
-	private processContentType(contentType: IContentType) {
+	private processContentType(contentType: ContentType) {
 		const entryDef = this.getOrCreateEntryDefinition();
 		const schema = this.processContentTypeInterior(contentType);
 		const base = S.allOf([S.ref(`#/definitions/${entryDef}`), schema]);
 		this._definitions.set(contentType.uid, base);
 	}
 
-	private processContentTypeInterior(contentType: IContentType) {
+	private processContentTypeInterior(contentType: ContentType) {
 		return contentType.schema.reduce(
 			(s, field) => s.prop(field.uid, this.processField(field)),
 			S.object().required(identifyRequiredFields(contentType.schema))
 		);
 	}
 
-	private processField(field: IContentField): ISchema {
+	private processField(field: Field): ISchema {
+		if ('taxonomies' in field) {
+			throw new Error('');
+		}
+
+		if (!('data_type' in field)) {
+			throw new Error(`Field is missing a data_type: ${inspect(field)}`);
+		}
+
 		switch (field.data_type) {
 			case 'blocks':
 				return this.processModularBlocksField(field);
@@ -109,33 +102,33 @@ export default class SchemaWalker {
 		}
 	}
 
-	private processJsonField(field: IJsonContentField) {
+	private processJsonField(field: Extract<Field, { data_type: 'json' }>) {
 		return applyBaseFieldsFrom(field).to(handleMultiple(field, S.raw({})));
 	}
 
-	private processLinkField(field: ILinkContentField) {
+	private processLinkField(field: Extract<Field, { data_type: 'link' }>) {
 		const name = this.getOrCreateLinkDefinition();
 		const ref = S.ref(`#/definitions/${name}`);
 		const multiple = handleMultiple(field, ref);
 		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
-	private processTextField(field: ITextContentField) {
+	private processTextField(field: Extract<Field, { data_type: 'text' }>) {
 		let schema: ISchema = S.string();
 
-		if (field.min !== undefined && field.min > 0) {
+		if ('min' in field && typeof field.min === 'number' && field.min > 0) {
 			schema = schema.minLength(field.min);
 		}
 
-		if (field.max !== undefined) {
+		if ('max' in field && typeof field.max === 'number') {
 			schema = schema.maxLength(field.max);
 		}
 
-		if (field.format) {
+		if ('format' in field && typeof field.format === 'string') {
 			schema = schema.pattern(field.format);
 		}
 
-		if (field.enum) {
+		if (isSelectField(field)) {
 			schema = schema.enum(field.enum.choices.map((choice) => choice.value));
 		}
 
@@ -143,8 +136,10 @@ export default class SchemaWalker {
 		return applyBaseFieldsFrom(field).to(schema);
 	}
 
-	private processReferenceField(field: IReferenceContentField) {
-		const referenced = field.reference_to ?? [];
+	private processReferenceField(
+		field: Extract<Field, { data_type: 'reference' }>
+	) {
+		const referenced = field.reference_to;
 
 		if (referenced.length === 0) {
 			return applyBaseFieldsFrom(field).to(S.array().maxItems(0));
@@ -165,15 +160,15 @@ export default class SchemaWalker {
 		return applyBaseFieldsFrom(field).to(ref);
 	}
 
-	private processNumberField(field: INumberContentField) {
+	private processNumberField(field: Extract<Field, { data_type: 'number' }>) {
 		const { min, max } = field;
 		let schema: ISchema = S.number();
 
-		if (min !== undefined && min !== null) {
+		if (typeof min === 'number') {
 			schema = schema.minimum(min);
 		}
 
-		if (max !== undefined && max !== null) {
+		if (typeof max === 'number') {
 			schema = schema.maximum(max);
 		}
 
@@ -181,25 +176,31 @@ export default class SchemaWalker {
 		return applyBaseFieldsFrom(field).to(schema);
 	}
 
-	private processBooleanField(field: IBooleanContentField): ISchema {
+	private processBooleanField(
+		field: Extract<Field, { data_type: 'boolean' }>
+	): ISchema {
 		const schema = handleMultiple(field, S.boolean());
 		return applyBaseFieldsFrom(field).to(schema);
 	}
 
-	private processGlobalField(field: IGlobalContentField): ISchema {
+	private processGlobalField(
+		field: Extract<Field, { data_type: 'global_field' }>
+	): ISchema {
 		const ref = S.ref(`#/definitions/${field.reference_to}`);
 		const multiple = handleMultiple(field, ref);
 		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
-	private processIsoDateField(field: IDateContentField) {
+	private processIsoDateField(field: Extract<Field, { data_type: 'isodate' }>) {
 		const format = field.field_metadata?.hide_time ? 'date' : 'date-time';
 		const schema = S.string().format(format);
 		const multiple = handleMultiple(field, schema);
 		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
-	private processModularBlocksField(field: IBlocksContentField): ISchema {
+	private processModularBlocksField(
+		field: Extract<Field, { data_type: 'blocks' }>
+	): ISchema {
 		const possibleBlocks = field.blocks.map((block) => {
 			const blockSchema = this.processModularBlocksBlock(block);
 			return S.object().prop(block.uid, blockSchema).required([block.uid]);
@@ -210,10 +211,22 @@ export default class SchemaWalker {
 		return applyBaseFieldsFrom(field).to(modularBlocks);
 	}
 
-	private processModularBlocksBlock(block: IBlock) {
+	private processModularBlocksBlock(
+		block: NonNullable<
+			Extract<Field, { data_type: 'blocks' }>['blocks']
+		>[number]
+	) {
 		const metadataName = this.getOrCreateMetadataDefinition();
 
-		if (block.reference_to) {
+		if ('reference_to' in block) {
+			if (typeof block.reference_to !== 'string') {
+				throw new Error(
+					`Expected a string for block.reference_to, but got ${inspect(
+						block.reference_to
+					)}`
+				);
+			}
+
 			return S.object()
 				.allOf([
 					S.ref(`#/definitions/${block.reference_to}`),
@@ -237,14 +250,18 @@ export default class SchemaWalker {
 		]);
 	}
 
-	private processFileField(field: IFileContentField): ISchema {
+	private processFileField(
+		field: Extract<Field, { data_type: 'file' }>
+	): ISchema {
 		const name = this.getOrCreateHostedFileDefinition();
 		const ref = S.ref(`#/definitions/${name}`);
 		const multiple = handleMultiple(field, ref);
 		return applyBaseFieldsFrom(field).to(multiple);
 	}
 
-	private processGroupField(group: IGroupContentField): ISchema {
+	private processGroupField(
+		group: Extract<Field, { data_type: 'group' }>
+	): ISchema {
 		const metadataName = this.getOrCreateMetadataDefinition();
 
 		let groupSchema: ISchema = S.object();
@@ -306,10 +323,15 @@ export default class SchemaWalker {
 	}
 }
 
-function applyBaseFieldsFrom({
-	display_name: title,
-	field_metadata: { description } = {}
-}: IContentField) {
+function applyBaseFieldsFrom(field: Exclude<Field, { taxonomies: unknown }>) {
+	const meta = field.field_metadata ?? {};
+
+	const title =
+		typeof field.display_name === 'string' ? field.display_name : '';
+
+	const description =
+		typeof meta === 'object' && 'description' in meta ? meta.description : null;
+
 	const docs =
 		typeof description === 'string' && description.length > 0
 			? description
@@ -322,26 +344,25 @@ function applyBaseFieldsFrom({
 	};
 }
 
-function handleMultiple(field: IContentField, schema: ISchema) {
+function handleMultiple(field: Field, schema: ISchema) {
 	if (!field.multiple) {
 		return schema;
 	}
 
-	const { min_instance: min, max_instance: max } = field;
 	let array = S.array().items(schema);
 
-	if (typeof min === 'number') {
-		array = array.minItems(min);
+	if ('min_instance' in field && typeof field.min_instance === 'number') {
+		array = array.minItems(field.min_instance);
 	}
 
-	if (typeof max === 'number') {
-		array = array.maxItems(max);
+	if ('max_instance' in field && typeof field.max_instance === 'number') {
+		array = array.maxItems(field.max_instance);
 	}
 
 	return array;
 }
 
-function identifyRequiredFields(schema: readonly IContentField[]) {
+function identifyRequiredFields(schema: readonly Field[]) {
 	// Mandatory fields are required because they are mandatory.
 	//
 	// Multiple fields are required because Contentstack always returns an array.
@@ -355,12 +376,28 @@ function identifyRequiredFields(schema: readonly IContentField[]) {
 	// Last observed on 2023-07-31.
 	const mandatory = schema.filter(
 		(s) =>
+			'taxonomies' in s ||
 			s.mandatory ||
-			s.multiple ||
+			(s.multiple ?? false) ||
 			s.data_type === 'link' ||
 			s.data_type === 'group'
 	);
 
 	const required = new Set(mandatory.map((s) => s.uid));
 	return [...required].sort();
+}
+
+function isSelectField(field: Field): field is Extract<
+	Field,
+	{
+		data_type: 'text';
+		enum: { advanced: boolean; choices: { value: string }[] };
+	}
+> {
+	return (
+		'data_type' in field &&
+		field.data_type === 'text' &&
+		'enum' in field &&
+		field.enum !== null
+	);
 }

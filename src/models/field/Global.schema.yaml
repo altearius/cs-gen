@@ -1,0 +1,22 @@
+type: object
+
+description: |
+  A Global field is a reusable field (or group of fields) that you can define
+  once and reuse in any content type within your stack.
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+required: [data_type, reference_to]
+
+properties:
+  data_type: { const: global_field }
+  reference_to: { type: string }
+
+examples:
+  - data_type: global_field
+    display_name: Global Field
+    reference_to: '{{global_field_uid}}'
+    uid: global_field
+    mandatory: false
+    multiple: false
+    unique: false

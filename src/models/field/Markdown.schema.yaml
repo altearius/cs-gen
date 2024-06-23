@@ -1,0 +1,35 @@
+type: object
+
+description: |
+  The Markdown field accepts text in markdown format which is an easy-to-read
+  text that is marked with certain tags or formatting instructions.
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+required: [data_type, field_metadata]
+
+properties:
+  data_type: { const: text }
+
+  field_metadata:
+    type: object
+    required: [markdown]
+    properties:
+      description: { $ref: './meta/description.schema.yaml' }
+
+      markdown:
+        type: boolean
+        description: |
+          Lets you assign a field to be a markdown by setting its value
+          to `true`.
+
+examples:
+  - data_type: text
+    display_name: Markdown
+    uid: markdown
+    field_metadata:
+      description: ''
+      markdown: true
+    multiple: false
+    mandatory: false
+    unique: false

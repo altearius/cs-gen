@@ -1,0 +1,25 @@
+$id: Field
+
+description: A single field in a content type.
+
+type: object
+
+oneOf:
+  - $ref: './field/Boolean.schema.yaml'
+  - $ref: './field/Date.schema.yaml'
+  - $ref: './field/Extension.schema.yaml'
+  - $ref: './field/File.schema.yaml'
+  - $ref: './field/Global.schema.yaml'
+  - $ref: './field/Group.schema.yaml'
+  - $ref: './field/HtmlRte.schema.yaml'
+  - $ref: './field/JsonRte.schema.yaml'
+  - $ref: './field/Link.schema.yaml'
+  - $ref: './field/Markdown.schema.yaml'
+  - $ref: './field/ModularBlocks.schema.yaml'
+  - $ref: './field/Number.schema.yaml'
+  - $ref: './field/Reference.schema.yaml'
+  - $ref: './field/Select.schema.yaml'
+  - $ref: './field/Taxonomy.schema.yaml'
+  - $ref: './field/TextBox.schema.yaml'
+  - $ref: './field/Title.schema.yaml'
+  - $ref: './field/Url.schema.yaml'

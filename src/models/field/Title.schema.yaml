@@ -1,0 +1,28 @@
+type: object
+
+description: |
+  The Title field is the entry title and will have a unique value, i.e.,
+  entries cannot have the same title.
+
+required: [data_type, mandatory, multiple]
+
+properties:
+  data_type: { const: text }
+  mandatory: { const: true }
+  multiple: { const: false }
+  field_metadata:
+    type: object
+    properties:
+      _default: { $ref: './meta/_default.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - display_name: Title
+    uid: title
+    data_type: text
+    mandatory: true
+    unique: true
+    field_metadata:
+      _default: true
+    multiple: false

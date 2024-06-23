@@ -1,0 +1,66 @@
+type: object
+
+description: |
+  The Single Line Textbox field supports only plain text and is used to enter
+  some short text.
+
+  The Multi Line Textbox field accepts multi-line arbitrary text and enters a
+  large chunk of data.
+
+required: [data_type]
+
+properties:
+  data_type: { const: text }
+
+  field_metadata:
+    type: object
+    properties:
+      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+      description: { $ref: './meta/description.schema.yaml' }
+      multiline: { $ref: './meta/multiline.schema.yaml' }
+
+  format:
+    description: |
+      This parameter takes a regex that you can use to validate the value
+      of a field.
+    type: string
+    format: regex
+
+  error_messages:
+    description: |
+      This parameter is the error message that will be displayed if a field
+      value is not validated. You can set a format for it as well.
+    type: object
+    additionalProperties: true
+    properties:
+      format: { type: string }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: text
+    display_name: Single line textbox
+    uid: single_line
+    field_metadata:
+      description: ''
+      default_value: ''
+    format: ''
+    error_messages:
+      format": ''
+    multiple: false
+    mandatory: false
+    unique: false
+
+  - data_type: text
+    display_name: Multi line textbox
+    uid: multi_line
+    field_metadata:
+      description: ''
+      default_value: ''
+      multiline: true
+    format: ''
+    error_messages:
+      format: ''
+    multiple: false
+    mandatory: false
+    unique: false

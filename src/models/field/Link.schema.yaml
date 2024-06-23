@@ -1,0 +1,36 @@
+type: object
+
+description: The Link field accepts a valid static or relative URL and a title.
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+required: [data_type]
+
+properties:
+  data_type: { const: link }
+
+  extensions: { type: array }
+
+  field_metadata:
+    type: object
+    properties:
+      description: { $ref: './meta/description.schema.yaml' }
+
+      default_value:
+        type: object
+        properties:
+          title: { type: string }
+          url: { type: string }
+
+examples:
+  - data_type: link
+    display_name: Link
+    uid: link
+    field_metadata:
+      description: ''
+      default_value:
+        title: ''
+        url: ''
+    multiple: false
+    mandatory: false
+    unique: false

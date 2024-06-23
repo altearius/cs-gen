@@ -1,0 +1,96 @@
+type: object
+
+description: |
+  The Select field allows users to choose one or more options from a set of
+  predefined choices that can be displayed in the form of radio buttons,
+  checkboxes, or dropdown options.
+
+required: [data_type, field_metadata, display_type, enum]
+
+properties:
+  data_type: { const: text }
+
+  display_type:
+    type: string
+
+    description: |
+      This parameter allows you to assign a display type either in the form
+      of radio button, checkboxes, or dropdown.
+
+  enum:
+    type: object
+    description: |
+      This parameter allows you to provide the choice for the
+      `Select` field.
+
+    oneOf:
+      - required: [advanced, choices]
+        properties:
+          advanced: { const: false }
+          choices:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              required: [value]
+              properties:
+                value: { type: string }
+
+      - required: [advanced, choices]
+        properties:
+          advanced: { const: true }
+          choices:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              required: [key, value]
+              properties:
+                key: { type: string }
+                value: { type: string }
+
+  field_metadata:
+    type: object
+    properties:
+      description: { $ref: './meta/description.schema.yaml' }
+      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: text
+    display_name: Select
+    display_type: dropdown
+    enum:
+      advanced: false
+      choices:
+        - value: '1'
+        - value: '2'
+        - value: '3'
+    multiple: true
+    uid: select
+    field_metadata:
+      description: ''
+      default_value: ''
+    mandatory: false
+    unique: false
+
+  - data_type: text
+    display_name: Select
+    display_type: dropdown
+    enum:
+      advanced: true
+      choices:
+        - key: New York
+          value: NY
+        - key: India
+          value: IN
+        - key: Australia
+          value: AUS
+    multiple: true
+    uid: select
+    field_metadata:
+      description: ''
+      default_value: ''
+    mandatory: false
+    unique: false

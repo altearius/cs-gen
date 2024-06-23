@@ -1,0 +1,31 @@
+type: object
+
+description: |
+  You can create a custom field that you can use in your content types.
+
+required: [data_type]
+properties:
+  data_type: { const: json }
+  extension_uid: { type: string }
+
+  config:
+    type: object
+    additionalProperties: true
+
+  field_metadata:
+    type: object
+    properties:
+      _default: { $ref: './meta/_default.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - display_name: Extension
+    uid: text
+    data_type: json
+    extension_uid: blt002c000ce00b00000
+    config: { key: value }
+    mandatory: true
+    field_metadata: { _default: true }
+    multiple: false
+    unique: false

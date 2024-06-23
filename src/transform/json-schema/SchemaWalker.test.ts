@@ -4,13 +4,13 @@ import FixturePath from '#test/helpers/FixturePath.js';
 import { describe, expect, it } from '@jest/globals';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import IContentType from '../../models/IContentType.js';
+import type { ContentType } from '../../models/ContentType.schema.yaml';
 
 describe(SchemaWalker.name, () => {
 	it('generates appropriate schema for link fields', async () => {
 		// Arrange
 		const [contentTypes, expected] = await loadFixtures();
-		const globalTypes = new Map<string, IContentType>();
+		const globalTypes = new Map<string, ContentType>();
 		const schema = new SchemaCollection(contentTypes, globalTypes);
 		const walker = new SchemaWalker(schema);
 
@@ -35,11 +35,11 @@ async function loadFixtures() {
 		readFile(schemaPath, 'utf-8')
 	]);
 
-	const contentType = JSON.parse(rawType) as IContentType;
+	const contentType = JSON.parse(rawType) as ContentType;
 	const schema = JSON.parse(rawSchema) as unknown;
 
 	return [
-		new Map<string, IContentType>([[contentType.uid, contentType]]),
+		new Map<string, ContentType>([[contentType.uid, contentType]]),
 		schema
 	] as const;
 }

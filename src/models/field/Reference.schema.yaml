@@ -1,0 +1,36 @@
+type: object
+
+description: |
+  The Reference field allows you to create references to entries of the same
+  content type or other content types.
+
+required: [data_type, reference_to, field_metadata]
+properties:
+  data_type: { const: reference }
+
+  reference_to:
+    type: array
+    items: { type: string }
+    minItems: 1
+    description: |
+      Allows you to set a reference to any content type or global field.
+
+  field_metadata:
+    type: object
+    required: [ref_multiple, ref_multiple_content_types]
+    properties:
+      ref_multiple: { const: false }
+      ref_multiple_content_types: { const: true }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: reference
+    display_name: Reference
+    uid: reference
+    reference_to: ''
+    field_metadata:
+      ref_multiple: false
+    multiple: false
+    mandatory: false
+    unique: false

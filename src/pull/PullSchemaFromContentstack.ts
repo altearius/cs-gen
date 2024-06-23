@@ -1,18 +1,20 @@
 import { join } from 'node:path';
-import type IContentType from '../models/IContentType.js';
+import { ContentType } from '../models/ContentType.schema.yaml';
 import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
+import { CreateClient } from './CreateClient.js';
 import GetContentTypes from './GetContentTypes.js';
 import GetGlobalFields from './GetGlobalFields.js';
 
 export default async function PullSchemaFromContentstack(
 	options: IOptions
 ): Promise<{
-	readonly contentTypes: ReadonlyMap<string, IContentType>;
-	readonly globalTypes: ReadonlyMap<string, IContentType>;
+	readonly contentTypes: ReadonlyMap<string, ContentType>;
+	readonly globalTypes: ReadonlyMap<string, ContentType>;
 }> {
-	const contentTypesPromise = GetContentTypes(options);
-	const globalsPromise = GetGlobalFields(options);
+	const client = CreateClient(options);
+	const contentTypesPromise = GetContentTypes(client);
+	const globalsPromise = GetGlobalFields(client);
 
 	const saveContentTypes = saveResponse(
 		options,

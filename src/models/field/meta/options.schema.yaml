@@ -1,0 +1,34 @@
+type: array
+examples:
+  - ['h3', 'blockquote', 'sup']
+description: |
+  If you choose the Custom editor, then the options key lets you specify the
+  formatting options you prefer for your RTE toolbar.
+items:
+  type: string
+  enum:
+    - alignment
+    - blockquote
+    - bold
+    - deleted
+    - h1
+    - h2
+    - h3
+    - h4
+    - h5
+    - h6
+    - html
+    - imagemanager
+    - italic
+    - link
+    - lists
+    - pre
+    - properties
+    - redo
+    - reference_to
+    - sub
+    - sup
+    - table
+    - underline
+    - undo
+    - video

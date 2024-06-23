@@ -1,0 +1,5 @@
+type: string
+enum: [basic, custom, advanced]
+description: |
+  Lets you enable either the basic, custom, or advanced editor to enter
+  your content.

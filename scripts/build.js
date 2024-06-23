@@ -1,11 +1,19 @@
 #!/usr/bin/env node
 
-import generateTypes from './lib/generate-types.js';
+import * as generate from './lib/generate-types.js';
+import { generateValidation } from './lib/generate-validator.js';
 import compileTs from './lib/compile-ts.js';
 import copySchema from './lib/copy-schema.js';
 import setExec from './lib/set-exec.js';
 
-await generateTypes();
+await Promise.all([
+	generateValidation(),
+	generate.field(),
+	generate.contentType(),
+	generate.getAllContentTypesResponse(),
+	generate.getAllGlobalFieldsResponse()
+]);
+
 compileTs();
 
 await Promise.all([copySchema(), setExec()]);

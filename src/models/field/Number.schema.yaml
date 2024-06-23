@@ -1,0 +1,33 @@
+type: object
+
+description: |
+  The Number field accepts numeric data where you can enter any kind of numbers
+  such as phone number or zip code.
+
+  The Boolean field accepts a true or false value.
+
+required: [data_type]
+
+properties:
+  data_type: { const: number }
+  min: { type: number }
+  max: { type: number }
+
+  field_metadata:
+    type: object
+    properties:
+      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+      description: { $ref: './meta/description.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: number
+    display_name: Number
+    uid: number
+    field_metadata:
+      description: ''
+      default_value: ''
+    multiple: false
+    mandatory: false
+    unique: false

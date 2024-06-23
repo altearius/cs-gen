@@ -1,0 +1,42 @@
+type: object
+
+description: |
+  The JSON Rich Text Editor is used to enter HTML content, but it renders
+  into a JSON data structure.
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+required: [data_type]
+
+properties:
+  data_type: { const: json }
+
+  field_metadata:
+    type: object
+    properties:
+      allow_json_rte: { const: true }
+      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+      description: { $ref: './meta/description.schema.yaml' }
+      rich_text_type: { $ref: './meta/richTextType.schema.yaml' }
+      options: { $ref: './meta/options.schema.yaml' }
+
+  reference_to:
+    type: array
+    items: { type: string }
+
+  non_localizable: { type: boolean }
+
+examples:
+  - data_type: json
+    display_name: JSON RTE
+    uid: json_rte
+    field_metadata:
+      allow_json_rte: true
+      rich_text_type: advanced
+      description: ''
+      default_value: ''
+    reference_to: ['content_type_uid']
+    non_localizable: false
+    multiple: false
+    mandatory: false
+    unique: false

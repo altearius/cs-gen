@@ -1,0 +1,58 @@
+type: object
+
+description: Shared properties for all fields in a content type.
+
+required: [display_name, uid]
+
+properties:
+  display_name:
+    type: string
+    description: Determines the display name of a field.
+
+  uid:
+    type: string
+    description: Represents the unique ID of each field.
+
+  mandatory:
+    type: boolean
+    description: |
+      Determines whether a field can be left without a value or not. If the
+      mandatory parameter of a field is set to “true,” the user cannot leave
+      this field empty.
+
+  unique:
+    type: boolean
+    description: |
+      Decides whether the value entered in the field has to be unique or not.
+
+  multiple:
+    type: boolean
+    description: |
+      Allows you to assign multiple values to a field. By default, this
+      parameter is set to “false” for the Title field. For Content Types with
+      the field marked as multiple, you need to pass the values in the array
+      format in the request body. For example, "multi_line": ["Text1", "Text2"]
+
+  field_metadata:
+    type: object
+    description: Allows you to enter additional data about a field.
+    additionalProperties: true
+
+examples:
+  - display_name: Title
+    uid: title
+    data_type: text
+    mandatory: true
+    unique: true
+    field_metadata:
+      _default: true
+    multiple: false
+
+  - display_name: URL
+    uid: url
+    data_type: text
+    mandatory: true
+    field_metadata:
+      _default: true
+    multiple: false
+    unique: false

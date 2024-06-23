@@ -1,0 +1,27 @@
+type: object
+
+description: The URL field allows you to enter a URL of the entry.
+
+required: [data_type, mandatory, multiple, unique]
+
+properties:
+  data_type: { const: text }
+  mandatory: { const: true }
+  multiple: { const: false }
+  unique: { const: false }
+  field_metadata:
+    type: object
+    properties:
+      _default: { $ref: './meta/_default.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - display_name: URL
+    uid: url
+    data_type: text
+    mandatory: true
+    field_metadata:
+      _default: true
+    multiple: false
+    unique: false

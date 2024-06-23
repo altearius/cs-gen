@@ -1,13 +1,13 @@
 import type { SchemaObject } from 'ajv';
 import yaml from 'js-yaml';
 import { extname } from 'node:path';
-import type IContentType from '../../models/IContentType.js';
+import { ContentType } from '../../models/ContentType.schema.yaml';
 import type IOptions from '../../models/IOptions.js';
 import FormatAndSave from '../../services/FormatAndSave.js';
 import SchemaCollection from './SchemaCollection.js';
 import SchemaWalker from './SchemaWalker.js';
 
-type ITypeCollection = ReadonlyMap<string, IContentType>;
+type ITypeCollection = ReadonlyMap<string, ContentType>;
 
 export default async function TransformToJsonSchema(
 	options: IOptions,

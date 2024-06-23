@@ -13,7 +13,22 @@
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
-	"eslint.experimental.useFlatConfig": true,
+	"eslint.rules.customizations": [
+		{
+			"rule": "jest/expect-expect",
+			"severity": "off"
+		},
+		{
+			"rule": "jest/no-focused-tests",
+			"severity": "off"
+		}
+	],
+	"eslint.useFlatConfig": true,
+	"files.readonlyInclude": {
+		"**/node_modules/**": true,
+		"src/models/*.schema.d.yaml.ts": true,
+		"src/models/validate.mjs": true
+	},
 	"javascript.preferences.importModuleSpecifier": "project-relative",
 	"javascript.preferences.importModuleSpecifierEnding": "js",
 	"npm.packageManager": "yarn",
@@ -21,8 +36,9 @@
 	"typescript.preferences.importModuleSpecifierEnding": "js",
 	"typescript.tsc.autoDetect": "off",
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"eslint.rules.customizations": [
-		{ "rule": "jest/expect-expect", "severity": "off" },
-		{ "rule": "jest/no-focused-tests", "severity": "off" }
-	]
+	"yaml.schemas": {
+		"https://json-schema.org/draft/2020-12/schema": [
+			"src/models/**/*.schema.yaml"
+		]
+	}
 }

@@ -1,0 +1,71 @@
+$id: ContentType
+type: object
+
+description: A Content Type.
+
+additionalProperties: false
+
+required:
+  - created_at
+  - schema
+  - title
+  - uid
+  - updated_at
+
+properties:
+  title: { type: string }
+  uid: { type: string }
+
+  created_at:
+    type: string
+    format: date-time
+
+  updated_at:
+    type: string
+    format: date-time
+
+  schema:
+    type: array
+    items: { $ref: './Field.schema.yaml' }
+
+  options:
+    type: object
+    additionalProperties: false
+    properties:
+      is_page: { type: boolean }
+      publishable: { type: boolean }
+      singleton: { type: boolean }
+      sub_title: { type: array }
+      title: { type: string }
+      url_pattern: { type: string }
+      url_prefix: { type: string }
+
+examples:
+  - title: Page
+    uid: page
+    created_at: 2018-02-23T07:13:53.667Z
+    updated_at: 2018-02-23T07:13:53.717Z
+    schema:
+      - display_name: Title
+        uid: title
+        data_type: text
+        field_metadata:
+          _default: true
+        unique: false
+        mandatory: true
+        multiple: false
+      - display_name: URL
+        uid: url
+        data_type: text
+        field_metadata:
+          _default: true
+        unique: false
+        multiple: false
+    options:
+      title: title
+      publishable: true
+      is_page: true
+      singleton: false
+      sub_title: [url]
+      url_pattern: /:title
+      url_prefix: /

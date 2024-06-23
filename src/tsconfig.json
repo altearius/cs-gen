@@ -1,8 +1,11 @@
 {
 	"compilerOptions": {
-		"outDir": "../dist"
+		"allowArbitraryExtensions": true,
+		"allowJs": true,
+		"outDir": "../dist",
+		"skipLibCheck": true
 	},
 	"exclude": ["./**/*.test.ts"],
 	"extends": "../tsconfig.base.json",
-	"include": ["./**/*.ts"]
+	"include": ["./**/*.ts", "./models/validate.mjs"]
 }

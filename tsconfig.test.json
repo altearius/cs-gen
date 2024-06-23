@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"allowArbitraryExtensions": true,
+		"allowJs": true,
 		"baseUrl": ".",
 		"outDir": "./.jest/tsc",
 		"paths": {
@@ -10,5 +12,9 @@
 	},
 	"extends": "./tsconfig.base.json",
 	"include": ["./src/**/*.test.ts", "./test/**/*.ts"],
-	"references": [{ "path": "./src/tsconfig.json" }]
+	"references": [
+		{
+			"path": "./src/tsconfig.json"
+		}
+	]
 }

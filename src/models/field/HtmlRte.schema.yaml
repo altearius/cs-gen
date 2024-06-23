@@ -1,0 +1,47 @@
+type: object
+
+description: The HTML Rich Text Editor is used to enter HTML content.
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+required: [data_type, field_metadata]
+
+properties:
+  data_type: { const: text }
+
+  field_metadata:
+    type: object
+    required: [allow_rich_text]
+    properties:
+      description: { $ref: './meta/description.schema.yaml' }
+      multiline: { $ref: './meta/multiline.schema.yaml' }
+      options: { $ref: './meta/options.schema.yaml' }
+      rich_text_type: { $ref: './meta/richTextType.schema.yaml' }
+
+      allow_rich_text:
+        const: true
+        description: |
+          Determines whether the editor will support rich text, and is set
+          to `true` by default for Rich Text Editors.
+
+      version:
+        type: integer
+        description: |
+          This key determines whether you are using the older version of the
+          Rich Text Editor or the latest version. The value of 1 denotes
+          that it is an older version of the editor, while 3 denotes that it
+          is the latest version of the editor.
+
+examples:
+  - data_type: text
+    display_name: HTML Rich text editor
+    uid: html_rich_text_editor
+    field_metadata:
+      allow_rich_text: true
+      description: ''
+      multiline: false
+      rich_text_type: advanced
+      version: 3
+    multiple: false
+    mandatory: false
+    unique: false

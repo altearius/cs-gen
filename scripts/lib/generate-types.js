@@ -1,37 +1,91 @@
+import openapiTS from 'openapi-typescript';
+import { resolve } from 'node:path';
 import { compileFromFile } from 'json-schema-to-typescript';
 import { writeFile } from 'node:fs/promises';
 
-export default async function generateTypes() {
-	await Promise.all([
-		generateContentFieldSchema(),
-		generateSchema('GetAllContentTypesResponse'),
-		generateSchema('GetAllGlobalFieldsResponse')
-	]);
-}
+const models = resolve('src', 'models');
 
-async function generateContentFieldSchema() {
-	const filePath = 'src/pull/ContentField.schema.json';
+export async function getAllGlobalFieldsResponse() {
+	const input = resolve(models, 'GetAllGlobalFieldsResponse.schema.yaml');
+	const output = resolve(models, 'GetAllGlobalFieldsResponse.schema.d.yaml.ts');
 
-	const contentField = await compileFromFile(filePath, {
-		cwd: 'src/pull',
-		unreachableDefinitions: true,
-		bannerComment: ''
-	});
-
-	await writeFile('src/pull/ContentField.schema.d.ts', contentField, 'utf-8');
-}
-
-async function generateSchema(input) {
-	const bannerComment =
-		'import type { IContentField } from "./ContentField.schema"';
-
-	const filePath = `src/pull/${input}.schema.json`;
-
-	const contentField = await compileFromFile(filePath, {
-		cwd: 'src/pull',
+	const schema = await compileFromFile(input, {
+		bannerComment: "import type { Field } from './Field.schema.yaml';",
 		declareExternallyReferenced: false,
-		bannerComment
+		additionalProperties: false,
+		strictIndexSignatures: true,
+		cwd: models,
+		unknownAny: true,
+		$refOptions: { mutateInputSchema: false }
 	});
 
-	await writeFile(`src/pull/${input}.schema.d.ts`, contentField, 'utf-8');
+	await writeFile(output, schema, 'utf-8');
+}
+
+export async function getAllContentTypesResponse() {
+	const input = resolve(models, 'GetAllContentTypesResponse.schema.yaml');
+	const output = resolve(models, 'GetAllContentTypesResponse.schema.d.yaml.ts');
+
+	const schema = await compileFromFile(input, {
+		bannerComment:
+			"import type { ContentType } from './ContentType.schema.yaml';",
+		declareExternallyReferenced: false,
+		additionalProperties: false,
+		strictIndexSignatures: true,
+		cwd: models,
+		unknownAny: true,
+		$refOptions: { mutateInputSchema: false }
+	});
+
+	await writeFile(output, schema, 'utf-8');
+}
+
+export async function openApiTypes() {
+	const input = resolve('src', 'models', 'cma-openapi-3.json');
+	const output = resolve('src', 'models', 'cma-openapi-3.d.json.ts');
+
+	await writeFile(
+		output,
+		await openapiTS(input, {
+			alphabetize: true,
+			excludeDeprecated: true,
+			immutableTypes: true
+		}),
+		'utf-8'
+	);
+}
+
+export async function field() {
+	const models = resolve('src', 'models');
+	const input = resolve(models, 'Field.schema.yaml');
+	const output = resolve(models, 'Field.schema.d.yaml.ts');
+
+	const schema = await compileFromFile(input, {
+		declareExternallyReferenced: true,
+		additionalProperties: false,
+		strictIndexSignatures: true,
+		cwd: models,
+		unknownAny: true,
+		$refOptions: { mutateInputSchema: false }
+	});
+
+	await writeFile(output, schema, 'utf-8');
+}
+
+export async function contentType() {
+	const models = resolve('src', 'models');
+	const input = resolve(models, 'ContentType.schema.yaml');
+	const output = resolve(models, 'ContentType.schema.d.yaml.ts');
+
+	const schema = await compileFromFile(input, {
+		bannerComment: "import type { Field } from './Field.schema.yaml';",
+		declareExternallyReferenced: false,
+		additionalProperties: false,
+		strictIndexSignatures: true,
+		cwd: models,
+		unknownAny: true,
+		$refOptions: { mutateInputSchema: false }
+	});
+
+	await writeFile(output, schema, 'utf-8');
 }

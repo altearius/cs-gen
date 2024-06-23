@@ -1,10 +1,10 @@
-import type IContentType from '../../models/IContentType.js';
+import type { ContentType } from '../../models/ContentType.schema.yaml';
 import ReferenceFinder from './ReferenceFinder.js';
 
-type ITypeCollection = ReadonlyMap<string, IContentType>;
+type ITypeCollection = ReadonlyMap<string, ContentType>;
 
 export default class SchemaCollection {
-	private readonly _sorted: readonly IContentType[];
+	private readonly _sorted: readonly ContentType[];
 
 	public constructor(
 		public readonly contentTypes: ITypeCollection,
@@ -23,7 +23,7 @@ export default class SchemaCollection {
 }
 
 function mapByUid(...contentTypes: ITypeCollection[]) {
-	const map = new Map<string, IContentType>();
+	const map = new Map<string, ContentType>();
 
 	for (const contentTypeMap of contentTypes) {
 		for (const [uid, type] of contentTypeMap) {
@@ -35,14 +35,14 @@ function mapByUid(...contentTypes: ITypeCollection[]) {
 }
 
 function sortTopologically(
-	contentTypes: ReadonlySet<IContentType>,
-	mapped: ReadonlyMap<string, IContentType>
+	contentTypes: ReadonlySet<ContentType>,
+	mapped: ReadonlyMap<string, ContentType>
 ) {
 	const visited = new Set<string>();
 	const finder = new ReferenceFinder(mapped);
-	const sorted: IContentType[] = [];
+	const sorted: ContentType[] = [];
 
-	function visit(contentType: IContentType, ...path: readonly string[]) {
+	function visit(contentType: ContentType, ...path: readonly string[]) {
 		throwOnCircularReference(contentType, ...path);
 
 		const { schema, uid } = contentType;
@@ -69,7 +69,7 @@ function sortTopologically(
 }
 
 function throwOnCircularReference(
-	{ uid }: IContentType,
+	{ uid }: ContentType,
 	...path: readonly string[]
 ) {
 	if (path.includes(uid)) {

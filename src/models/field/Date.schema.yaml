@@ -1,0 +1,40 @@
+type: object
+
+description: |
+  The Date field renders a calendar that allows the user to select a date and time, which is accepted in the ISO format
+
+required: [data_type]
+
+properties:
+  data_type: { const: isodate }
+
+  startDate:
+    type: string
+    format: date-time
+    nullable: true
+
+  endDate:
+    type: string
+    format: date-time
+    nullable: true
+
+  field_metadata:
+    type: object
+    properties:
+      default_value: { $ref: './meta/defaultValue.schema.yaml' }
+      description: { $ref: './meta/description.schema.yaml' }
+
+allOf: [$ref: './StandardField.schema.yaml']
+
+examples:
+  - data_type: isodate
+    display_name: Date
+    uid: date
+    startDate: null
+    endDate: null
+    field_metadata:
+      description: ''
+      default_value: ''
+    multiple: false
+    mandatory: false
+    unique: false

@@ -1,0 +1,4 @@
+type: string
+description: |
+  Allows you to provide additional information about a field. The help text
+  appears when the user hovers on the "?" sign beside the field name.
