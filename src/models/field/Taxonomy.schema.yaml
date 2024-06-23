@@ -4,11 +4,14 @@ description: |
   The Taxonomy field allows users to categorize content within your stack to
   facilitate easy navigation, search, and retrieval of information.
 
-required: [uid, taxonomies]
+required: [data_type, uid, taxonomies]
+
+allOf: [$ref: './StandardField.schema.yaml']
 
 properties:
-  uid: { type: string }
-  multiple: { type: boolean }
+  # data_type is undocumented but but observed to be present as of 2025-06-23.
+  data_type: { const: taxonomy }
+
   taxonomies:
     type: array
     items:
@@ -20,7 +23,9 @@ properties:
         non_localizable: { type: boolean }
 
 examples:
-  - uid: taxonomies
+  - data_type: taxonomy
+    display_name: Taxonomy
+    uid: taxonomies
     multiple: false
     taxonomies:
       - taxonomy_uid: taxonomy_1
@@ -31,3 +36,11 @@ examples:
         max_terms: 10
         mandatory: false
         non_localizable: false
+    field_metadata:
+      description: ''
+      default_value: ''
+    format: ''
+    error_messages: { format: '' }
+    mandatory: false
+    non_localizable: false
+    unique: false

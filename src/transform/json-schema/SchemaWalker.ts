@@ -58,14 +58,6 @@ export default class SchemaWalker {
 	}
 
 	private processField(field: Field): ISchema {
-		if ('taxonomies' in field) {
-			throw new Error('');
-		}
-
-		if (!('data_type' in field)) {
-			throw new Error(`Field is missing a data_type: ${inspect(field)}`);
-		}
-
 		switch (field.data_type) {
 			case 'blocks':
 				return this.processModularBlocksField(field);
@@ -100,6 +92,9 @@ export default class SchemaWalker {
 			case 'text':
 				return this.processTextField(field);
 
+			case 'taxonomy':
+				return this.processTaxonomyField(field);
+
 			default:
 				throw new Error(`Unknown field type: ${inspect(field)}`);
 		}
@@ -114,6 +109,19 @@ export default class SchemaWalker {
 		const ref = S.ref(`#/definitions/${name}`);
 		const multiple = handleMultiple(field, ref);
 		return applyBaseFieldsFrom(field).to(multiple);
+	}
+
+	private processTaxonomyField(
+		field: Extract<Field, { data_type: 'taxonomy' }>
+	) {
+		let schema: ISchema = S.object()
+			.prop('taxonomy_uid', S.string())
+			.prop('term_uid', S.string())
+			.required(['taxonomy_uid', 'term_uid']);
+
+		schema = S.array().items(schema);
+
+		return applyBaseFieldsFrom(field).to(schema);
 	}
 
 	private processTextField(field: Extract<Field, { data_type: 'text' }>) {
@@ -326,7 +334,7 @@ export default class SchemaWalker {
 	}
 }
 
-function applyBaseFieldsFrom(field: Exclude<Field, { taxonomies: unknown }>) {
+function applyBaseFieldsFrom(field: Field) {
 	const meta = field.field_metadata ?? {};
 
 	const title =
@@ -377,13 +385,16 @@ function identifyRequiredFields(schema: readonly Field[]) {
 	//
 	// Group fields are required because Contentstack always returns an object.
 	// Last observed on 2023-07-31.
+	//
+	// Taxonomy fields are required because Contentstack always returns an array.
+	// The array is empty if there are no values. Last observed on 2024-06-23.
 	const mandatory = schema.filter(
 		(s) =>
-			'taxonomies' in s ||
 			s.mandatory === true ||
 			(s.multiple ?? false) ||
 			s.data_type === 'link' ||
-			s.data_type === 'group'
+			s.data_type === 'group' ||
+			s.data_type === 'taxonomy'
 	);
 
 	const required = new Set(mandatory.map((s) => s.uid));
