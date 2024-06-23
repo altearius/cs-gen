@@ -14,7 +14,8 @@ export default [
 			// The following ignores refer to generated code:
 			'.jest/**/*',
 			'dist/**/*',
-			'src/pull/*.schema.d.ts'
+			'src/models/*.schema.d.yaml.ts',
+			'src/models/*.d.json.ts'
 		],
 		linterOptions: { reportUnusedDisableDirectives: true },
 		rules: {
@@ -24,10 +25,7 @@ export default [
 	},
 	{
 		files: ['src/**/*.ts', 'test/**/*.ts'],
-		ignores: [
-			// schema.d.ts files are generated code.
-			'src/pull/*.schema.d.ts'
-		],
+		ignores: ['src/models/*.schema.d.yaml.ts', 'src/models/*.d.json.ts'],
 		plugins: { '@typescript-eslint': ts },
 
 		languageOptions: {

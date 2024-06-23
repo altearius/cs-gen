@@ -38,7 +38,7 @@ async function* getAllContentTypes(client: Client) {
 	}
 }
 
-async function getBatch(client: Client, skip: number = 0) {
+async function getBatch(client: Client, skip = 0) {
 	const { data, error } = await client.GET('/v3/content_types', {
 		params: {
 			query: {

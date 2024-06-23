@@ -26,6 +26,7 @@
 	"eslint.useFlatConfig": true,
 	"files.readonlyInclude": {
 		"**/node_modules/**": true,
+		"src/models/cma-openapi-3.*": true,
 		"src/models/*.schema.d.yaml.ts": true,
 		"src/models/validate.mjs": true
 	},
