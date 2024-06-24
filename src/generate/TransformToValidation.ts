@@ -1,7 +1,8 @@
 import type { SchemaObject } from 'ajv';
-import Ajv from 'ajv';
+import Ajv, { MissingRefError } from 'ajv';
 import addFormats from 'ajv-formats';
 import standaloneCode from 'ajv/dist/standalone/index.js';
+import c from 'ansi-colors';
 import { join } from 'node:path';
 import type IOptions from '../models/IOptions.js';
 import FormatAndSave from '../services/FormatAndSave.js';
@@ -32,11 +33,29 @@ export default async function TransformToValidation(
 			continue;
 		}
 
-		console.log('Generating validation code:', name);
-		const compiled = ajv.compile(schema);
+		const compiled = tryCompile(ajv, schema, name);
+		if (!compiled) {
+			continue;
+		}
+
 		const code = standaloneCode(ajv, compiled);
 		const filepath = join(validationPath, `${name}.js`);
 		await FormatAndSave(filepath, 'babel', code);
+	}
+}
+
+function tryCompile(ajv: Ajv, schema: SchemaObject, name: string) {
+	try {
+		return ajv.compile(schema);
+	} catch (ex: unknown) {
+		if (ex instanceof MissingRefError) {
+			console.error(
+				c.redBright('⚠ Could not resolve'),
+				c.yellowBright(ex.missingRef),
+				c.redBright('from'),
+				`${c.yellowBright(name)}${c.redBright('.')}`
+			);
+		}
 	}
 }
 
