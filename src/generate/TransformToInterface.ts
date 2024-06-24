@@ -1,4 +1,6 @@
+import { MissingPointerError } from '@apidevtools/json-schema-ref-parser';
 import type { SchemaObject } from 'ajv';
+import c from 'ansi-colors';
 import type { JSONSchema4 } from 'json-schema';
 import { compile } from 'json-schema-to-typescript';
 import type IOptions from '../models/IOptions.js';
@@ -27,18 +29,32 @@ export default async function TransformToInterface(
 		...prefixNames(jsonSchema, options.prefix)
 	};
 
-	const result = await compile(toCompile, 'ContentstackSchema', {
-		additionalProperties: false,
-		bannerComment: banner,
-		format: false,
-		$refOptions: { mutateInputSchema: false },
-		maxItems: 10,
-		strictIndexSignatures: true,
-		unknownAny: true,
-		unreachableDefinitions: false
-	});
+	const result = await tryCompile(toCompile, banner);
+
+	if (!result) {
+		return;
+	}
 
 	await FormatAndSave(typescriptPath, 'typescript', result);
+}
+
+async function tryCompile(schema: JSONSchema4, bannerComment: string) {
+	try {
+		return await compile(schema, 'ContentstackSchema', {
+			additionalProperties: false,
+			bannerComment,
+			format: false,
+			$refOptions: { mutateInputSchema: false },
+			maxItems: 10,
+			strictIndexSignatures: true,
+			unknownAny: true,
+			unreachableDefinitions: false
+		});
+	} catch (ex: unknown) {
+		if (ex instanceof MissingPointerError) {
+			console.error(c.redBright(`⚠ ${ex.message}`));
+		}
+	}
 }
 
 function prefixNames(

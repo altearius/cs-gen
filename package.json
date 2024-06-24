@@ -2,6 +2,7 @@
   "author": "Chris Nielsen <nielsen.chris@gmail.com>",
   "bin": "./dist/cs-gen.js",
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.6.4",
     "ajv": "^8.16.0",
     "ajv-formats": "^3.0.1",
     "ansi-colors": "^4.1.3",

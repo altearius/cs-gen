@@ -9,6 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@altearius/cs-gen@workspace:."
   dependencies:
+    "@apidevtools/json-schema-ref-parser": "npm:^11.6.4"
     "@eslint/js": "npm:^9.5.0"
     "@types/js-yaml": "npm:^4.0.9"
     "@types/json-schema": "npm:^7.0.15"
@@ -52,7 +53,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^11.5.5":
+"@apidevtools/json-schema-ref-parser@npm:^11.5.5, @apidevtools/json-schema-ref-parser@npm:^11.6.4":
   version: 11.6.4
   resolution: "@apidevtools/json-schema-ref-parser@npm:11.6.4"
   dependencies:
