@@ -1,10 +1,6 @@
 type: object
 
-description: |
-  The Number field accepts numeric data where you can enter any kind of numbers
-  such as phone number or zip code.
-
-  The Boolean field accepts a true or false value.
+description: The Boolean field accepts a true or false value.
 
 required: [data_type]
 
