@@ -12,7 +12,7 @@ export function CreateClient(options: IOptions) {
 		onRequest: (o) => {
 			o.request.headers.set('api_key', options.apiKey);
 			o.request.headers.set('authorization', options.managementToken);
-			o.request.headers.set('branch', options.branch);
+			o.request.headers.set('branch', options.branch ?? 'main');
 		}
 	});
 
