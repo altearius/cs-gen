@@ -114,8 +114,19 @@ export default class SchemaWalker {
 	private processTaxonomyField(
 		field: Extract<Field, { data_type: 'taxonomy' }>
 	) {
+		const uniqueNames = new Set(
+			field.taxonomies
+				.map((t) => t.taxonomy_uid)
+				.filter((uid): uid is string => typeof uid === 'string')
+		);
+
+		const taxonomyProp =
+			uniqueNames.size === 0
+				? S.string()
+				: S.string().enum([...uniqueNames].sort());
+
 		let schema: ISchema = S.object()
-			.prop('taxonomy_uid', S.string())
+			.prop('taxonomy_uid', taxonomyProp)
 			.prop('term_uid', S.string())
 			.required(['taxonomy_uid', 'term_uid']);
 
