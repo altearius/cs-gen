@@ -9,6 +9,7 @@ import JsonSchemaPathOption from './options/JsonSchemaPathOption.js';
 import ManagementTokenOption from './options/ManagementTokenOption.js';
 import PrefixOption from './options/PrefixOption.js';
 import ResponsePathOption from './options/ResponsePathOption.js';
+import TsBannerOption from './options/TsBannerOption.js';
 import TypeScriptPathOption from './options/TypeScriptPathOption.js';
 import ValidationCodePathOption from './options/ValidationCodePathOption.js';
 
@@ -22,9 +23,12 @@ const GenerateCommand = new Command('generate')
 	.addOption(PrefixOption)
 	.addOption(ResponsePathOption)
 	.addOption(TypeScriptPathOption)
+	.addOption(TsBannerOption)
 	.addOption(ValidationCodePathOption);
 
-type CommandOptions = Omit<IOptions, 'filter'> & {
+type CommandOptions = Omit<IOptions, 'filter' | 'typescriptOptions'> & {
+	readonly bannerComment?: string;
+	readonly maxItems?: number;
 	readonly include?: readonly string[];
 	readonly exclude?: readonly string[];
 };
@@ -40,7 +44,8 @@ GenerateCommand.action(async (options: CommandOptions) => {
 
 	await Generate({
 		...options,
-		filter: generateFilter(options)
+		filter: generateFilter(options),
+		typescriptOptions: generateTypescriptOptions(options)
 	});
 });
 
@@ -55,4 +60,14 @@ function generateFilter({ include, exclude }: CommandOptions) {
 	}
 
 	return (uid: string) => !excluded.has(uid);
+}
+
+function generateTypescriptOptions({
+	bannerComment,
+	maxItems
+}: CommandOptions) {
+	return {
+		...(bannerComment ? { bannerComment } : {}),
+		...(typeof maxItems === 'number' ? { maxItems } : {})
+	};
 }

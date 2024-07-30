@@ -1,3 +1,5 @@
+import type { Options } from 'json-schema-to-typescript';
+
 /**
  * Represents the options for configuring the ContentStack Type Generator.
  */
@@ -56,4 +58,12 @@ export default interface IOptions {
 	 * be generated into this folder.
 	 */
 	readonly validationPath?: string;
+
+	/**
+	 * Options to pass to json-schema-to-typescript.
+	 */
+	readonly typescriptOptions: Pick<
+		Partial<Options>,
+		'bannerComment' | 'maxItems'
+	>;
 }
