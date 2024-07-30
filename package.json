@@ -18,13 +18,13 @@
   },
   "description": "Generate code based on a Contentstack stack",
   "devDependencies": {
-    "@eslint/js": "^9.7.0",
+    "@eslint/js": "^9.8.0",
     "@types/js-yaml": "^4.0.9",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^20.14.12",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
-    "eslint": "^9.7.0",
+    "@types/node": "^20.14.13",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
@@ -32,7 +32,7 @@
     "fast-glob": "^3.3.2",
     "globals": "^15.8.0",
     "jest": "^29.7.0",
-    "openapi-typescript": "^7.1.0",
+    "openapi-typescript": "^7.1.1",
     "typescript": "^5.5.4"
   },
   "imports": {
