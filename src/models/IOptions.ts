@@ -62,7 +62,7 @@ export default interface IOptions {
 	/**
 	 * Options to pass to json-schema-to-typescript.
 	 */
-	readonly typescriptOptions: Pick<
+	readonly typescriptOptions?: Pick<
 		Partial<Options>,
 		'bannerComment' | 'maxItems'
 	>;
